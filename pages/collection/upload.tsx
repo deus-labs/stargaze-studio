@@ -25,6 +25,7 @@ const UploadPage: NextPage = () => {
   const baseTokenURI = useCollectionStore().base_token_uri
   
   const [uploadMethod, setUploadMethod] = useState('New')
+  const [uploadService, setUploadService] = useState('NFT Storage')
   const [parsedMetadata, setParsedMetadata] = useState<any>(null)
   const [metadataFileArrayIndex, setMetadataFileArrayIndex] = useState(0)
   
@@ -108,7 +109,7 @@ const UploadPage: NextPage = () => {
   }
   const updateMetadata = async () => {
     console.log(imageFilesArray)
-    const imageURI = await upload(imageFilesArray, "NFTStorage")
+    const imageURI = await upload(imageFilesArray, "NFT Storage")//TODO: change to uploadService
     console.log(imageURI)
     updatedMetadataFilesArray = []
     let reader: FileReader
@@ -136,7 +137,7 @@ const UploadPage: NextPage = () => {
     }
   }
   const uploadUpdatedMetadata = async () => {
-    const baseTokenURI = await upload(updatedMetadataFilesArray, "NFTStorage")
+    const baseTokenURI = await upload(updatedMetadataFilesArray, "NFT Storage")//TODO: change to uploadService
     setBaseTokenUri("ipfs://" + baseTokenURI)
     console.log("ipfs://" + baseTokenURI)
   }
@@ -239,8 +240,8 @@ const UploadPage: NextPage = () => {
           <input
             className="float-none mr-2 mb-1 w-4 h-4 align-middle bg-white checked:bg-stargaze bg-center bg-no-repeat bg-contain rounded-full border border-gray-300 checked:border-white focus:outline-none transition duration-200 appearance-none cursor-pointer form-check-input"
             type="radio"
-            name="inlineRadioOptions2"
-            id="inlineRadio2"
+            name="inlineRadioOptions1"
+            id="inlineRadio1"
             value="Existing"
             onClick={() => {
               setUploadMethod('Existing')
@@ -250,7 +251,7 @@ const UploadPage: NextPage = () => {
           />
           <label
             className="inline-block text-white cursor-pointer form-check-label"
-            htmlFor="inlineRadio2"
+            htmlFor="inlineRadio1"
           >
             Use an existing URI
           </label>
@@ -260,8 +261,8 @@ const UploadPage: NextPage = () => {
           <input
             className="float-none mr-2 mb-1 w-4 h-4 align-middle bg-white checked:bg-stargaze bg-center bg-no-repeat bg-contain rounded-full border border-gray-300 checked:border-white focus:outline-none transition duration-200 appearance-none cursor-pointer form-check-input"
             type="radio"
-            name="inlineRadioOptions"
-            id="inlineRadio3"
+            name="inlineRadioOptions2"
+            id="inlineRadio2"
             value="New"
             onClick={() => {
               setUploadMethod('New')
@@ -271,7 +272,7 @@ const UploadPage: NextPage = () => {
           />
           <label
             className="inline-block text-white cursor-pointer form-check-label"
-            htmlFor="inlineRadio3"
+            htmlFor="inlineRadio2"
           >
             Upload assets & metadata
           </label>
@@ -323,7 +324,52 @@ const UploadPage: NextPage = () => {
         </div>
       )}
       {uploadMethod == 'New' && (
-        <div>
+      <div>
+        <div className="justify-items-start mt-5 mb-3 ml-3 flex-column">
+        <div className="mt-3 ml-4 form-check form-check-inline">
+          <input
+            className="float-none mr-2 mb-1 w-4 h-4 align-middle bg-white checked:bg-stargaze bg-center bg-no-repeat bg-contain rounded-full border border-gray-300 checked:border-white focus:outline-none transition duration-200 appearance-none cursor-pointer form-check-input"
+            type="radio"
+            name="inlineRadioOptions3"
+            id="inlineRadio3"
+            value="NFT Storage"
+            onClick={() => {
+              setUploadService('NFT Storage')
+            }}
+            onChange={() => { }}
+            checked={uploadService === 'NFT Storage'}
+          />
+          <label
+            className="inline-block text-white cursor-pointer form-check-label"
+            htmlFor="inlineRadio3"
+          >
+            Upload using NFT.Storage
+          </label>
+        </div>
+        
+        <div className="mt-3 ml-4 form-check form-check-inline">
+          <input
+            className="float-none mr-2 mb-1 w-4 h-4 align-middle bg-white checked:bg-stargaze bg-center bg-no-repeat bg-contain rounded-full border border-gray-300 checked:border-white focus:outline-none transition duration-200 appearance-none cursor-pointer form-check-input"
+            type="radio"
+            name="inlineRadioOptions4"
+            id="inlineRadio4"
+            value="Pinata"
+            onClick={() => {
+              setUploadService('Pinata')
+            }}
+            onChange={() => { }}
+            checked={uploadService === 'Pinata'}
+          />
+          <label
+            className="inline-block text-white cursor-pointer form-check-label"
+            htmlFor="inlineRadio4"
+          >
+            Upload using Pinata
+          </label>
+        </div>
+        </div>
+      
+       <div>
           <div className= "grid grid-cols-2">
             <div className='w-full'>
               <label className="block mt-5 mr-1 mb-1 ml-8 w-full font-bold text-white dark:text-gray-300">
@@ -480,6 +526,7 @@ const UploadPage: NextPage = () => {
           </div> 
           
         </div>
+      </div>
       )}
     </div>
   )
