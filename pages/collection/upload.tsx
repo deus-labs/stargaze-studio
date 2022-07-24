@@ -7,24 +7,14 @@ import { setBaseTokenUri, setImage } from 'contexts/collection'
 import { useWallet } from 'contexts/wallet'
 import { NextPage } from 'next'
 import { NextSeo } from 'next-seo'
-import { Blob, File, NFTStorage } from 'nft.storage'
 import { ChangeEvent, useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
-import { FaArrowRight } from 'react-icons/fa'
 import { withMetadata } from 'utils/layout'
 import { links } from 'utils/links'
 import { naturalCompare } from 'utils/sort'
-import { UrlInput } from '../../components/forms/FormInput';
-import { AnchorButtonProps } from '../../components/AnchorButton';
 import { Conditional } from 'components/Conditional'
 import { upload } from 'services/upload'
 import { Alert } from 'components/Alert'
-
-
-interface ImagePreview{
-  name: string,
-  dataURL: string;
-}
 
 let imageFilesArray: File[] = [];
 let metadataFilesArray: File[] = [];
