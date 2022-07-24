@@ -17,6 +17,9 @@ import { naturalCompare } from 'utils/sort'
 import { UrlInput } from '../../components/forms/FormInput';
 import { AnchorButtonProps } from '../../components/AnchorButton';
 import { Conditional } from 'components/Conditional'
+import { upload } from 'services/upload'
+import { Alert } from 'components/Alert'
+
 
 interface ImagePreview{
   name: string,
@@ -29,23 +32,21 @@ let updatedMetadataFilesArray: File[] = [];
 
 const UploadPage: NextPage = () => {
   const wallet = useWallet()
-  
-
   const baseTokenURI = useCollectionStore().base_token_uri
-  const [baseImageURI, setBaseImageURI] = useState('')
+  
   const [uploadMethod, setUploadMethod] = useState('New')
   const [parsedMetadata, setParsedMetadata] = useState<any>(null)
-  const [metadataAttributes, setMetadataAttributes] = useState<Record<string, string>[]>([])
   const [metadataFileArrayIndex, setMetadataFileArrayIndex] = useState(0)
-
-
-
+  
   const imageFilesRef = useRef<HTMLInputElement>(null)
   const metadataFilesRef = useRef<HTMLInputElement>(null)
 
-  const NFT_STORAGE_TOKEN =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDJBODk5OGI4ZkE2YTM1NzMyYmMxQTRDQzNhOUU2M0Y2NUM3ZjA1RWIiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY1NTE5MTcwNDQ2MiwibmFtZSI6IlRlc3QifQ.IbdV_26bkPHSdd81sxox5AoG-5a4CCEY4aCrdbCXwAE'
-  const client = new NFTStorage({ token: NFT_STORAGE_TOKEN })
+  const metadataNameRef = useRef<HTMLInputElement>(null)
+  const metadataDescriptionRef = useRef<HTMLInputElement>(null)
+  const metadataExternalUrlRef = useRef<HTMLInputElement>(null)
+  const metadataImageRef = useRef<HTMLInputElement>(null)
+  const addAttributeTraitTypeRef = useRef<HTMLInputElement>(null)
+  const addAttributeTraitValueRef = useRef<HTMLInputElement>(null)
 
   const handleChangeBaseTokenUri = (event: {
     target: { value: React.SetStateAction<string> }
@@ -88,6 +89,7 @@ const UploadPage: NextPage = () => {
   
   const selectMetadata = (event: ChangeEvent<HTMLInputElement>) => {
     metadataFilesArray = []
+    updatedMetadataFilesArray = []
     console.log(imageFilesArray)
     console.log(event.target.files)
     let reader: FileReader
@@ -116,7 +118,7 @@ const UploadPage: NextPage = () => {
   }
   const updateMetadata = async () => {
     console.log(imageFilesArray)
-    const imageURI = await client.storeDirectory(imageFilesArray)
+    const imageURI = await upload(imageFilesArray, "NFTStorage")
     console.log(imageURI)
     updatedMetadataFilesArray = []
     let reader: FileReader
@@ -136,16 +138,17 @@ const UploadPage: NextPage = () => {
         updatedMetadataFilesArray.push(updatedMetadataFile)
         console.log(updatedMetadataFile.name + ' => ' + metadataJSON.image)
         if (i === metadataFilesArray.length - 1) {
-          upload()
+          uploadUpdatedMetadata()
         }
       }
       reader.readAsText(metadataFilesArray[i], 'utf8')
       //reader.onloadend = function (e) { ...
     }
   }
-  const upload = async () => {
-    const baseTokenURI = await client.storeDirectory(updatedMetadataFilesArray)
-    console.log(baseTokenURI)
+  const uploadUpdatedMetadata = async () => {
+    const baseTokenURI = await upload(updatedMetadataFilesArray, "NFTStorage")
+    setBaseTokenUri("ipfs://" + baseTokenURI)
+    console.log("ipfs://" + baseTokenURI)
   }
 
   const parseMetadata = async (index: number) => {
@@ -153,30 +156,22 @@ const UploadPage: NextPage = () => {
     setMetadataFileArrayIndex(index)
     let parsedMetadataObject = JSON.parse(await metadataFilesArray[index]?.text()) || null 
     setParsedMetadata(parsedMetadataObject)
-    let metadata_name = document.querySelector("#metadata_name") as HTMLInputElement
-    let metadata_description = document.querySelector("#metadata_description") as HTMLInputElement
-    let metadata_external_url = document.querySelector("#metadata_external_url") as HTMLInputElement
-    let metadata_image = document.querySelector("#metadata_image") as HTMLInputElement
-    metadata_name.value = parsedMetadataObject?.name || ''
-    metadata_description.value = parsedMetadataObject?.description || ''
-    metadata_external_url.value = parsedMetadataObject?.external_url || ''
-    metadata_image.value = (updatedMetadataFilesArray.length > 0 ? (JSON.parse(await updatedMetadataFilesArray[index]?.text()))?.image || "" : 'Not uploaded yet.') 
+    
+    if(metadataNameRef.current) metadataNameRef.current.value = parsedMetadataObject?.name || ''
+    if(metadataDescriptionRef.current) metadataDescriptionRef.current.value = parsedMetadataObject?.description || ''
+    if(metadataExternalUrlRef.current) metadataExternalUrlRef.current.value = parsedMetadataObject?.external_url || ''
+    if(metadataImageRef.current) metadataImageRef.current.value = (updatedMetadataFilesArray.length > 0 ? (JSON.parse(await updatedMetadataFilesArray[index]?.text()))?.image || "" : 'Not uploaded yet.') 
+    if(addAttributeTraitTypeRef.current) addAttributeTraitTypeRef.current.value = ""
+    if(addAttributeTraitValueRef.current) addAttributeTraitValueRef.current.value = ""
   }
-
-  // useEffect(() => {
-  
-  // }, [parsedMetadata?.attributes])
 
   const updateMainMetadataValues = () => {
     console.log("Updating main metadata values...")
     let parsedMetadataObject = {...parsedMetadata}
-    let metadata_name = document.querySelector("#metadata_name") as HTMLInputElement
-    let metadata_description = document.querySelector("#metadata_description") as HTMLInputElement
-    let metadata_external_url = document.querySelector("#metadata_external_url") as HTMLInputElement
     
-    parsedMetadataObject.name = metadata_name.value
-    parsedMetadataObject.description = metadata_description.value
-    parsedMetadataObject.external_url = metadata_external_url.value
+    parsedMetadataObject.name = metadataNameRef.current?.value
+    parsedMetadataObject.description = metadataDescriptionRef.current?.value
+    parsedMetadataObject.external_url = metadataExternalUrlRef.current?.value
     setParsedMetadata(parsedMetadataObject)
   }
 
@@ -202,11 +197,10 @@ const UploadPage: NextPage = () => {
 
   const addMetadataAttribute = () => {
     let parsedMetadataObject = {...parsedMetadata}
-    let trait_type_input = document.querySelector('#add_attribute_trait_type_input') as HTMLInputElement
-    let trait_value_input = document.querySelector('#add_attribute_trait_value_input') as HTMLInputElement
-    parsedMetadata.attributes.push({trait_type: trait_type_input?.value, value: trait_value_input?.value})
-    trait_type_input.value = ''
-    trait_value_input.value = ''
+
+    parsedMetadata.attributes.push({trait_type: addAttributeTraitTypeRef.current?.value, value: addAttributeTraitValueRef.current?.value})
+    if(addAttributeTraitTypeRef.current) addAttributeTraitTypeRef.current.value = ''
+    if(addAttributeTraitValueRef.current) addAttributeTraitValueRef.current.value = ''
     console.log(parsedMetadata?.attributes)
     setParsedMetadata(parsedMetadataObject)
     console.log(parsedMetadata)
@@ -271,6 +265,7 @@ const UploadPage: NextPage = () => {
             Use an existing URI
           </label>
         </div>
+        
         <div className="mt-3 ml-4 form-check form-check-inline">
           <input
             className="float-none mr-2 mb-1 w-4 h-4 align-middle bg-white checked:bg-stargaze bg-center bg-no-repeat bg-contain rounded-full border border-gray-300 checked:border-white focus:outline-none transition duration-200 appearance-none cursor-pointer form-check-input"
@@ -291,6 +286,7 @@ const UploadPage: NextPage = () => {
             Upload assets & metadata
           </label>
         </div>
+        {baseTokenURI && (<Alert className="mt-5" type='info'><a target="_blank" href={baseTokenURI}>Base Token URI: {baseTokenURI}</a></Alert>)}
       </div>
 
       <hr className="border-white/20" />
@@ -404,19 +400,19 @@ const UploadPage: NextPage = () => {
               <h3 className="text-lg font-bold">Metadata</h3>
               <div className='flex-row'>
                 <label className="flex mt-2 mr-2 font-bold">Name</label>
-                <input key={"name-input"} id="metadata_name" className="pt-2 rounded w-1/3" type={'text'} onBlur={()=>{updateMainMetadataValues()}} defaultValue={parsedMetadata ? parsedMetadata.name : ""}/>
+                <input key={"name-input"} id="metadata_name" ref={metadataNameRef} className="pt-2 rounded w-1/3" type={'text'} onBlur={()=>{updateMainMetadataValues()}} defaultValue={parsedMetadata ? parsedMetadata.name : ""}/>
               </div>
               <div className='my-1 flex-row'>
                 <label className="flex mt-2 mr-2 font-bold">Description</label>
-                <input key={"description-input"} id="metadata_description" className="pt-2 rounded w-3/4" type={'text'} onBlur={()=>{updateMainMetadataValues()}} defaultValue={parsedMetadata ? parsedMetadata.description : ""}  />
+                <input key={"description-input"} id="metadata_description" ref={metadataDescriptionRef} className="pt-2 rounded w-3/4" type={'text'} onBlur={()=>{updateMainMetadataValues()}} defaultValue={parsedMetadata ? parsedMetadata.description : ""}  />
               </div>
               <div className='my-1 flex-row'>
                 <label className="flex mt-2 mr-2 font-bold">External URL</label>
-                <input key={"external-url-input"} id="metadata_external_url" className="pt-2 rounded w-3/4" type={'text'} onBlur={()=>{updateMainMetadataValues()}} defaultValue={parsedMetadata ? parsedMetadata.external_url : ""}  />
+                <input key={"external-url-input"} id="metadata_external_url" ref={metadataExternalUrlRef} className="pt-2 rounded w-3/4" type={'text'} onBlur={()=>{updateMainMetadataValues()}} defaultValue={parsedMetadata ? parsedMetadata.external_url : ""}  />
               </div>
               <div className='my-1 flex-row'>
                 <label className="flex mt-2 mr-2 font-bold">Image</label>
-                <input key={"image-input"} id="metadata_image" className="pt-2 rounded w-3/4" type={'text'} disabled defaultValue={parsedMetadata ? parsedMetadata.image : ""}  />
+                <input key={"image-input"} id="metadata_image" className="pt-2 rounded w-3/4" ref={metadataImageRef} type={'text'} disabled defaultValue={parsedMetadata ? parsedMetadata.image : ""}  />
               </div>
               <p className="pt-4 font-bold">Attributes</p>
               <div className='grid grid-cols-3'>
@@ -443,10 +439,10 @@ const UploadPage: NextPage = () => {
               )))}
                <div className='grid grid-cols-3'>
                 <div className="flex-row">
-                  <input id="add_attribute_trait_type_input" className="pt-2 mb-2 rounded w-3/4" type={'text'} defaultValue= {""}  />
+                  <input id="add_attribute_trait_type_input" ref={addAttributeTraitTypeRef} className="pt-2 mb-2 rounded w-3/4" type={'text'} defaultValue= {""}  />
                 </div>
                 <div className="flex-row">
-                  <input id="add_attribute_trait_value_input" className="pt-2 mb-2 rounded w-3/4" type={'text'} defaultValue={""}  />
+                  <input id="add_attribute_trait_value_input" ref={addAttributeTraitValueRef} className="pt-2 mb-2 rounded w-3/4" type={'text'} defaultValue={""}  />
                 </div>
                 <button className="flex-row mb-2 rounded w-1/4 border" onClick={()=>{addMetadataAttribute()}}>Add</button>
               </div>  
