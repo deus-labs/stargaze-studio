@@ -1,6 +1,5 @@
 import Anchor from 'components/Anchor'
-import CollectionInfo from 'components/CollectionInfo'
-import MintingInfo from 'components/MintingInfo'
+import { CollectionInfo } from 'components/CollectionInfo'
 import { useWallet } from 'contexts/wallet'
 import type { NextPage } from 'next'
 import { NextSeo } from 'next-seo'
@@ -29,7 +28,6 @@ const UploadPage: NextPage = () => {
       <hr className="border-white/20" />
 
       <CollectionInfo />
-      <MintingInfo />
     </div>
   )
 }

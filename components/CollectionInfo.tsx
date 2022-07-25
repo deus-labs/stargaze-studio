@@ -1,69 +1,105 @@
-import { setDescription, setExternalImage, setImage, setName } from 'contexts/collection'
-import React from 'react'
+import { Button } from 'components/Button'
+import { Conditional } from 'components/Conditional'
+import { FormControl } from 'components/FormControl'
+import { useInputState, useNumberInputState } from 'components/forms/FormInput.hooks'
+import { InputDateTime } from 'components/InputDateTime'
+import React, { useState } from 'react'
+import { useMutation } from 'react-query'
+
+import { NumberInput, TextInput } from './forms/FormInput'
 
 export const CollectionInfo = () => {
-  const handleChangeName = (event: { target: { value: React.SetStateAction<string> } }) => {
-    setName(event.target.value.toString())
-  }
+  const [timestamp, setTimestamp] = useState<Date | undefined>()
 
-  const handleChangeDescripion = (event: { target: { value: React.SetStateAction<string> } }) => {
-    setDescription(event.target.value.toString())
-  }
+  const nameState = useInputState({
+    id: 'name',
+    name: 'name',
+    title: 'Name',
+    subtitle: '',
+  })
 
-  const handleChangeImage = (event: { target: { value: React.SetStateAction<string> } }) => {
-    setImage(event.target.value.toString())
-  }
+  const descriptionState = useInputState({
+    id: 'description',
+    name: 'description',
+    title: 'Description',
+    subtitle: '',
+  })
 
-  const handleChangeExternalImage = (event: { target: { value: React.SetStateAction<string> } }) => {
-    setExternalImage(event.target.value.toString())
-  }
+  const imageState = useInputState({
+    id: 'image',
+    name: 'image',
+    title: 'Image',
+    subtitle: '',
+  })
+
+  const externalImageState = useInputState({
+    id: 'externalImage',
+    name: 'externalImage',
+    title: 'External Image',
+    subtitle: '',
+  })
+
+  const numberOfTokensState = useNumberInputState({
+    id: 'numberoftokens',
+    name: 'numberoftokens',
+    title: 'Number Of Tokens',
+    subtitle: '',
+    placeholder: '100',
+  })
+
+  const unitPriceState = useNumberInputState({
+    id: 'unitPrice',
+    name: 'unitPrice',
+    title: 'Unit Price',
+    subtitle: '',
+    placeholder: '100',
+  })
+
+  const perAddressLimitState = useNumberInputState({
+    id: 'peraddresslimit',
+    name: 'peraddresslimit',
+    title: 'Per Address Limit',
+    subtitle: '',
+    placeholder: '1',
+  })
+
+  const { isLoading, mutate } = useMutation(
+    (event: FormEvent) => {
+      //event.preventDefault()
+    },
+    {
+      onError: (error) => {
+        //toast.error(String(error))
+      },
+    },
+  )
 
   return (
-    <div className="flex flex-col justify-center items-center w-full">
-      <label className="block mt-3 mb-1 w-2/3 font-bold text-white dark:text-gray-300" htmlFor="name">
-        Name
-      </label>
-      <input
-        className="py-2 px-1 w-2/3 bg-white/10 rounded border-2 border-white/20 focus:ring
-          focus:ring-plumbus-20
-          form-input, placeholder:text-white/50,"
-        id="name"
-        onChange={handleChangeName}
-        placeholder="Collection Name"
-      />
-      <label className="block mt-3 mb-1 w-2/3 font-bold text-white dark:text-gray-300" htmlFor="description">
-        Description
-      </label>
-      <input
-        className="py-2 px-1 mt-2 mb-2 w-2/3 bg-white/10 rounded border-2 border-white/20 focus:ring
-        focus:ring-plumbus-20
-        form-input, placeholder:text-white/50,"
-        id="description"
-        onChange={handleChangeDescripion}
-        placeholder="An awesome NFT series"
-      />
-      <label className="block mt-3 mb-1 w-2/3 font-bold text-white dark:text-gray-300" htmlFor="image">
-        Image
-      </label>
-      <input
-        className="py-2 px-1 mt-2 mb-2 w-2/3 bg-white/10 rounded border-2 border-white/20 focus:ring
-        focus:ring-plumbus-20
-        form-input, placeholder:text-white/50,"
-        id="image"
-        onChange={handleChangeImage}
-        placeholder=""
-      />
-      <label className="block mt-3 mb-1 w-2/3 font-bold text-white dark:text-gray-300" htmlFor="externalimage">
-        External Image
-      </label>
-      <input
-        className="py-2 px-1 mt-2 mb-2 w-2/3 bg-white/10 rounded border-2 border-white/20 focus:ring
-        focus:ring-plumbus-20
-        form-input, placeholder:text-white/50,"
-        id="externalimage"
-        onChange={handleChangeExternalImage}
-        placeholder=""
-      />
+    <div>
+      <form className="grid grid-cols-2 p-4 space-x-8" onSubmit={mutate}>
+        <div className="space-y-8">
+          <TextInput {...nameState} />
+          <TextInput {...descriptionState} />
+          <TextInput {...imageState} />
+          <TextInput {...externalImageState} />
+          <NumberInput {...numberOfTokensState} />
+          <NumberInput {...unitPriceState} />
+          <NumberInput {...perAddressLimitState} />
+          <FormControl htmlId="timestamp" isRequired subtitle="Start time for the minting" title="Start Time">
+            <InputDateTime minDate={new Date()} onChange={(date) => setTimestamp(date)} value={timestamp} />
+          </FormControl>
+          <Conditional test>
+            <TextInput {...nameState} />
+          </Conditional>
+        </div>
+        <div className="space-y-8">
+          <div className="relative">
+            <Button className="absolute top-0 right-0" isLoading={isLoading} type="submit">
+              Upload
+            </Button>
+          </div>
+        </div>
+      </form>
     </div>
   )
 }
