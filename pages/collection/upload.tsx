@@ -16,6 +16,7 @@ import { upload } from 'services/upload'
 import { Alert } from 'components/Alert'
 import { serviceType } from 'services/upload'
 import { MetadataModal } from 'components/MetadataModal'
+import { StyledInput } from 'components/forms/StyledInput'
 
 let imageFilesArray: File[] = [];
 let metadataFilesArray: File[] = [];
@@ -29,6 +30,9 @@ const UploadPage: NextPage = () => {
   const [uploadService, setUploadService] = useState(serviceType.NFT_Storage)
   const [metadataFileArrayIndex, setMetadataFileArrayIndex] = useState(0)
   const [refreshMetadata, setRefreshMetadata] = useState(false)
+  const [nftStorageApiKey, setNftStorageApiKey] = useState('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDJBODk5OGI4ZkE2YTM1NzMyYmMxQTRDQzNhOUU2M0Y2NUM3ZjA1RWIiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY1NTE5MTcwNDQ2MiwibmFtZSI6IlRlc3QifQ.IbdV_26bkPHSdd81sxox5AoG-5a4CCEY4aCrdbCXwAE')
+  const [pinataApiKey, setPinataApiKey] = useState('c8c2ea440c09ee8fa639')
+  const [pinataSecretKey, setPinataSecretKey] = useState('9d6f42dc01eaab15f52eac8f36cc4f0ee4184944cb3cdbcda229d06ecf877ee7')
   
   const imageFilesRef = useRef<HTMLInputElement>(null)
   const metadataFilesRef = useRef<HTMLInputElement>(null)
@@ -103,7 +107,7 @@ const UploadPage: NextPage = () => {
   }
   const updateMetadata = async () => {
     console.log(imageFilesArray)
-    const imageURI = await upload(imageFilesArray, uploadService)
+    const imageURI = await upload(imageFilesArray, uploadService, "images", nftStorageApiKey, pinataApiKey, pinataSecretKey)
     console.log(imageURI)
     updatedMetadataFilesArray = []
     let reader: FileReader
@@ -130,7 +134,7 @@ const UploadPage: NextPage = () => {
     }
   }
   const uploadUpdatedMetadata = async () => {
-    const baseTokenURI = await upload(updatedMetadataFilesArray, uploadService, "metadata")
+    const baseTokenURI = await upload(updatedMetadataFilesArray, uploadService, "metadata", nftStorageApiKey, pinataApiKey, pinataSecretKey)
     setBaseTokenUri("ipfs://" + baseTokenURI)
     console.log("ipfs://" + baseTokenURI)
   }
@@ -302,6 +306,21 @@ const UploadPage: NextPage = () => {
           </label>
         </div>
         </div>
+        
+        <div className="ml-8 flex flex-col w-1/2" >
+          <Conditional test={uploadService === serviceType.NFT_Storage}>
+            <label>NFT.Storage API Key</label>
+            <StyledInput id={'nft_storage_api_key'} value={nftStorageApiKey} onChange={(e)=> setNftStorageApiKey(e.target.value)}></StyledInput>
+          </Conditional>
+        </div>
+        <div className="ml-8 flex flex-col w-1/2" >
+          <Conditional test={uploadService === serviceType.Pinata}>
+            <label>Pinata API Key</label>
+            <StyledInput className="w-1/2 mb-2 flex" id={'pinata_api_key'} value={pinataApiKey} onChange={(e)=> setPinataApiKey(e.target.value)}></StyledInput>
+            <label>Pinata Secret Key</label>
+            <StyledInput className="flex" id={'pinata_secret_key'} value={pinataSecretKey} onChange={(e)=> setPinataSecretKey(e.target.value)}></StyledInput>
+          </Conditional>
+        </div>  
       
        <div>
           <div className= "grid grid-cols-2">
