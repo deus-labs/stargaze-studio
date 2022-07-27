@@ -20,7 +20,7 @@ let imageFilesArray: File[] = [];
 let metadataFilesArray: File[] = [];
 let updatedMetadataFilesArray: File[] = [];
 
-const serviceType = {
+export const serviceType = {
 	NFT_Storage: "NFT Storage",
 	Pinata: "Pinata",
 }
