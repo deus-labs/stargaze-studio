@@ -28,13 +28,14 @@ export const MetadataModal = (props: MetadataModalProps) => {
         if(metadataFile){                
             attributesState.reset()
             parsedMetadata = JSON.parse(await metadataFile.text())
-            
-            //console.log(parsedMetadata)
+
             for(let i = 0; i < parsedMetadata.attributes.length; i++){
                 attributesState.add({trait_type: parsedMetadata.attributes[i].trait_type, value: parsedMetadata.attributes[i].value})      
             }
-            //attributesState.add({trait_type: '', value: ''})
-            console.log(attributesState.values)
+            nameState.onChange(parsedMetadata.name)
+            descriptionState.onChange(parsedMetadata.description)
+            externalUrlState.onChange(parsedMetadata.image)
+
             setMetadata(parsedMetadata)
         }
         if(updatedMetadataFile){
