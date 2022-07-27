@@ -9,8 +9,8 @@ export function useMetadataAttributesState() {
   const entries = useMemo(() => Object.entries(record), [record])
   const values = useMemo(() => Object.values(record), [record])
 
-  function add(attribute: Attribute= { trait_type: '', value: '' }) {
-    setRecord((prev) => ({ ...prev, [uid()]: attribute}))
+  function add(attribute: Attribute = { trait_type: '', value: '' }) {
+    setRecord((prev) => ({ ...prev, [uid()]: attribute }))
   }
 
   function update(key: string, attribute = record[key]) {

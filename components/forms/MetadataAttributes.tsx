@@ -28,12 +28,12 @@ export function MetadataAttributes(props: MetadataAttributesProps) {
       {attributes.map(([id], i) => (
         <MetadataAttribute
           key={`ma-${id}`}
+          defaultAttribute={attributes[i][1]}
           id={id}
           isLast={i === attributes.length - 1}
           onAdd={onAdd}
           onChange={onChange}
           onRemove={onRemove}
-          defaultAttribute={attributes[i][1]}
         />
       ))}
     </FormControl>
@@ -65,11 +65,11 @@ export function MetadataAttribute({ id, isLast, onAdd, onChange, onRemove, defau
     id: `ma-trait_value-${htmlId}`,
     name: `ma-trait_value-${htmlId}`,
     title: `Trait Value`,
-    defaultValue: defaultAttribute.value
+    defaultValue: defaultAttribute.value,
   })
 
   useEffect(() => {
-    onChange(id, {trait_type: traitTypeState.value, value: traitValueState.value})
+    onChange(id, { trait_type: traitTypeState.value, value: traitValueState.value })
   }, [traitTypeState.value, traitValueState.value, id])
 
   return (
@@ -79,7 +79,10 @@ export function MetadataAttribute({ id, isLast, onAdd, onChange, onRemove, defau
       <div className="flex justify-end items-end pb-2 w-8">
         <button
           className="flex justify-center items-center p-2 bg-plumbus-80 hover:bg-plumbus-60 rounded-full"
-          onClick={(e) => {e.preventDefault(); isLast ? onAdd() : onRemove(id)}}
+          onClick={(e) => {
+            e.preventDefault()
+            isLast ? onAdd() : onRemove(id)
+          }}
           type="button"
         >
           <Icon className="w-3 h-3" />
