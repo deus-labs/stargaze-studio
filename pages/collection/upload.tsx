@@ -1,6 +1,4 @@
 /* eslint-disable eslint-comments/disable-enable-pair */
-/* eslint-disable react/no-array-index-key */
-/* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable func-names */
 /* eslint-disable @typescript-eslint/no-loop-func */
