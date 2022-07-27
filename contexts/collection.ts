@@ -4,8 +4,8 @@ export const useCollectionStore = create(() => ({
   name: 'Example',
   base_token_uri: '',
   description: 'Lorem',
-  image:
-    'ipfs://bafybeigi3bwpvyvsmnbj46ra4hyffcxdeaj6ntfk5jpic5mx27x6ih2qvq/images/1.png',
+  image: 'ipfs://bafybeigi3bwpvyvsmnbj46ra4hyffcxdeaj6ntfk5jpic5mx27x6ih2qvq/images/1.png',
+  external_image: '',
   num_tokens: 10,
   per_address_limit: 1,
   start_time: '1650982532000000000',
@@ -28,6 +28,10 @@ export const setDescription = (value: string) => {
 
 export const setImage = (value: string) => {
   useCollectionStore.setState({ image: value })
+}
+
+export const setExternalImage = (value: string) => {
+  useCollectionStore.setState({ external_image: value })
 }
 
 export const setNumTokens = (value: number) => {

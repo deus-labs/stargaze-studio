@@ -3,13 +3,14 @@ import { Anchor } from 'components/Anchor'
 import { useWallet } from 'contexts/wallet'
 import { useRouter } from 'next/router'
 // import BrandText from 'public/brand/brand-text.svg'
-import { footerLinks, links, socialsLinks } from 'utils/links'
+import { footerLinks, socialsLinks } from 'utils/links'
 
 import { SidebarLayout } from './SidebarLayout'
 import { WalletLoader } from './WalletLoader'
 
 const routes = [
-  { text: 'Create Collection', href: `/collection/` },
+  { text: 'Create Collection', href: `/collections/` },
+  { text: 'Collections', href: `/collections` },
   { text: 'Contract Dashboards', href: `/contracts/` },
 ]
 
@@ -21,14 +22,7 @@ export const Sidebar = () => {
     <SidebarLayout>
       {/* Stargaze brand as home button */}
       <Anchor href="/" onContextMenu={(e) => [e.preventDefault(), router.push('/brand')]}>
-        <div
-          className={clsx(
-            'flex relative justify-center items-center mx-8 mt-2 space-y-4 w-1/2 h-16',
-            'rounded border-2 border-white/20 border-dashed',
-          )}
-        >
-          Home{/* <BrandText className="text-plumbus hover:text-plumbus-light transition" /> */}
-        </div>
+        <img alt="Brand Text" className="w-full" src="/stargaze-text.png" />
       </Anchor>
 
       {/* wallet button */}
@@ -53,7 +47,7 @@ export const Sidebar = () => {
       <div className="flex-grow" />
 
       {/* Stargaze network status */}
-      <div className="text-sm">Network: {wallet.network}</div>
+      <div className="text-sm capitalize">Network: {wallet.network}</div>
 
       {/* footer reference links */}
       <ul className="text-sm list-disc list-inside">
@@ -67,13 +61,7 @@ export const Sidebar = () => {
       </ul>
 
       {/* footer attribution */}
-      <div className="text-xs text-white/50">
-        StargazeTools {process.env.APP_VERSION} <br />
-        Made by{' '}
-        <Anchor className="text-plumbus hover:underline" href={links.deuslabs}>
-          deus labs
-        </Anchor>
-      </div>
+      <div className="text-xs text-white/50">Stargaze Studio {process.env.APP_VERSION}</div>
 
       {/* footer social links */}
       <div className="flex gap-x-6 items-center text-white/75">
