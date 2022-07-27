@@ -4,5 +4,6 @@ const NFT_STORAGE_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6
 const client = new NFTStorage({ token: NFT_STORAGE_TOKEN })
 
 export const uploadToNftStorage = async (fileArray: File[]): Promise<CIDString> => {
+    console.log("Uploading to NFT Storage...")
     return await client.storeDirectory(fileArray)
 }
