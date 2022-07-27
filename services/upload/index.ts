@@ -1,6 +1,10 @@
 import { uploadToNftStorage } from "./nft-storage"
 import { uploadToPinata } from "./pinata"
-import { serviceType } from "pages/collection/upload"
+
+export const serviceType = {
+	NFT_Storage: "NFT Storage",
+	Pinata: "Pinata",
+}
 
 export const upload = async (fileArray: File[], uploadService: string, fileType?: string): Promise<string> => {
     if(uploadService === serviceType.NFT_Storage)

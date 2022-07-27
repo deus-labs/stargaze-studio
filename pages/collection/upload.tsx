@@ -14,16 +14,12 @@ import { naturalCompare } from 'utils/sort'
 import { Conditional } from 'components/Conditional'
 import { upload } from 'services/upload'
 import { Alert } from 'components/Alert'
+import { serviceType } from 'services/upload'
 import { MetadataModal } from 'components/MetadataModal'
 
 let imageFilesArray: File[] = [];
 let metadataFilesArray: File[] = [];
 let updatedMetadataFilesArray: File[] = [];
-
-export const serviceType = {
-	NFT_Storage: "NFT Storage",
-	Pinata: "Pinata",
-}
 
 const UploadPage: NextPage = () => {
   const wallet = useWallet()
