@@ -12,8 +12,11 @@ import { useMutation } from 'react-query'
 import { NumberInput, TextInput } from './forms/FormInput'
 
 export const CollectionInfo = () => {
-  const { getCollapseProps, getToggleProps, isExpanded } = useCollapse()
+  const { getCollapseProps, getToggleProps } = useCollapse()
   const [timestamp, setTimestamp] = useState<Date | undefined>()
+
+  const toggleProps = getToggleProps()
+  const collapseProps = getCollapseProps()
 
   const nameState = useInputState({
     id: 'name',
@@ -141,8 +144,10 @@ export const CollectionInfo = () => {
               <InputDateTime minDate={new Date()} onChange={(date) => setTimestamp(date)} value={timestamp} />
             </FormControl>
           </FormGroup>
-          <button {...getToggleProps()}>Advanced</button>
-          <section {...getCollapseProps()}>
+          <button {...toggleProps} type="button">
+            Advanced
+          </button>
+          <section {...collapseProps}>
             <FormGroup subtitle="Information about your whitelisted addresses" title="Whitelist Details">
               <AddressList
                 entries={wladdressListState.entries}
