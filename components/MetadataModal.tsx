@@ -34,7 +34,7 @@ export const MetadataModal = (props: MetadataModalProps) => {
             }
             nameState.onChange(parsedMetadata.name)
             descriptionState.onChange(parsedMetadata.description)
-            externalUrlState.onChange(parsedMetadata.image)
+            externalUrlState.onChange(parsedMetadata.external_url)
 
             setMetadata(parsedMetadata)
         }
