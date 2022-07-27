@@ -232,6 +232,13 @@ const UploadPage: NextPage = () => {
             >
               NFT Storage
             </Anchor>{' '}
+            or{' '} 
+            <Anchor
+              href="https://www.pinata.cloud/"
+              className="font-bold text-plumbus hover:underline"
+            >
+              Pinata
+            </Anchor>{' '}
             and upload your assets & metadata manually to get a base URI for
             your collection.
           </p>
