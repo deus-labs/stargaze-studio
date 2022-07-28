@@ -1,4 +1,5 @@
 import { uploadToNftStorage } from './nft-storage'
+import type { UploadFileType } from './pinata'
 import { uploadToPinata } from './pinata'
 
 export type UploadServiceType = 'nft-storage' | 'pinata'
@@ -6,7 +7,7 @@ export type UploadServiceType = 'nft-storage' | 'pinata'
 export const upload = async (
   fileArray: File[],
   uploadService: UploadServiceType,
-  fileType: string,
+  fileType: UploadFileType,
   nftStorageApiKey: string,
   pinataApiKey: string,
   pinataSecretKey: string,

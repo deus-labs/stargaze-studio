@@ -13,14 +13,12 @@ export const uploadToPinata = async (
   fileType: UploadFileType,
 ): Promise<string> => {
   console.log('Uploading to Pinata...')
-  console.log(fileType)
-  console.log(PINATA_ENDPOINT_URL)
   const data = new FormData()
   fileArray.forEach((file) => {
     data.append('file', file, `${fileType}/${file.name}`)
   })
 
-  const res = await axios.post('https://api.pinata.cloud/pinning/pinFileToIPFS', data, {
+  const res = await axios.post(PINATA_ENDPOINT_URL, data, {
     withCredentials: true,
     headers: {
       pinata_api_key: pinataApiKey,
