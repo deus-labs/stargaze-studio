@@ -1,7 +1,7 @@
 /* eslint-disable eslint-comments/disable-enable-pair */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable func-names */
-/* eslint-disable @typescript-eslint/no-loop-func */
+
 import clsx from 'clsx'
 import { Alert } from 'components/Alert'
 import Anchor from 'components/Anchor'
@@ -10,7 +10,6 @@ import { Conditional } from 'components/Conditional'
 import { StyledInput } from 'components/forms/StyledInput'
 import { MetadataModal } from 'components/MetadataModal'
 import { setBaseTokenUri, setImage, useCollectionStore } from 'contexts/collection'
-import { useWallet } from 'contexts/wallet'
 import type { NextPage } from 'next'
 import { NextSeo } from 'next-seo'
 import type { ChangeEvent } from 'react'
@@ -22,17 +21,13 @@ import { withMetadata } from 'utils/layout'
 import { links } from 'utils/links'
 import { naturalCompare } from 'utils/sort'
 
-let imageFilesArray: File[] = []
-let metadataFilesArray: File[] = []
-let updatedMetadataFilesArray: File[] = []
-
 type UploadMethod = 'new' | 'existing'
 
 const UploadPage: NextPage = () => {
-  const wallet = useWallet()
-
   const baseTokenURI = useCollectionStore().base_token_uri
-
+  const [imageFilesArray, setImageFilesArray] = useState<File[]>([])
+  const [metadataFilesArray, setMetadataFilesArray] = useState<File[]>([])
+  const [updatedMetadataFilesArray, setUpdatedMetadataFilesArray] = useState<File[]>([])
   const [uploadMethod, setUploadMethod] = useState<UploadMethod>('new')
   const [uploadService, setUploadService] = useState<UploadServiceType>('nft-storage')
   const [metadataFileArrayIndex, setMetadataFileArrayIndex] = useState(0)
@@ -56,7 +51,7 @@ const UploadPage: NextPage = () => {
   }
 
   const selectImages = (event: ChangeEvent<HTMLInputElement>) => {
-    imageFilesArray = []
+    setImageFilesArray([])
     console.log(event.target.files)
     let reader: FileReader
     if (event.target.files === null) return
@@ -66,19 +61,19 @@ const UploadPage: NextPage = () => {
         if (!e.target?.result) return toast.error('Error parsing file.')
         if (!event.target.files) return toast.error('No files selected.')
         const imageFile = new File([e.target.result], event.target.files[i].name, { type: 'image/jpg' })
-        imageFilesArray.push(imageFile)
+        setImageFilesArray((prev) => [...prev, imageFile])
       }
       if (!event.target.files) return toast.error('No file selected.')
       reader.readAsArrayBuffer(event.target.files[i])
       reader.onloadend = function (e) {
-        imageFilesArray.sort((a, b) => naturalCompare(a.name, b.name))
+        setImageFilesArray((prev) => prev.sort((a, b) => naturalCompare(a.name, b.name)))
       }
     }
   }
 
   const selectMetadata = (event: ChangeEvent<HTMLInputElement>) => {
-    metadataFilesArray = []
-    updatedMetadataFilesArray = []
+    setMetadataFilesArray([])
+    setUpdatedMetadataFilesArray([])
     console.log(imageFilesArray)
     console.log(event.target.files)
     let reader: FileReader
@@ -89,12 +84,12 @@ const UploadPage: NextPage = () => {
         if (!e.target?.result) return toast.error('Error parsing file.')
         if (!event.target.files) return toast.error('No files selected.')
         const metadataFile = new File([e.target.result], event.target.files[i].name, { type: 'image/jpg' })
-        metadataFilesArray.push(metadataFile)
+        setMetadataFilesArray((prev) => [...prev, metadataFile])
       }
       if (!event.target.files) return toast.error('No file selected.')
       reader.readAsText(event.target.files[i], 'utf8')
       reader.onloadend = function (e) {
-        metadataFilesArray.sort((a, b) => naturalCompare(a.name, b.name))
+        setMetadataFilesArray((prev) => prev.sort((a, b) => naturalCompare(a.name, b.name)))
         console.log(metadataFilesArray)
       }
     }
@@ -110,7 +105,7 @@ const UploadPage: NextPage = () => {
       pinataSecretKey,
     )
     console.log(imageURI)
-    updatedMetadataFilesArray = []
+    setUpdatedMetadataFilesArray([])
     let reader: FileReader
     for (let i = 0; i < metadataFilesArray.length; i++) {
       reader = new FileReader()
