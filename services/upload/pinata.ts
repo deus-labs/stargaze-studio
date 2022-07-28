@@ -2,37 +2,25 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import axios from 'axios'
+import { PINATA_ENDPOINT_URL } from 'utils/constants'
 
-const endpoint = 'https://api.pinata.cloud/pinning/pinFileToIPFS'
+export type UploadFileType = 'images' | 'metadata'
 
 export const uploadToPinata = async (
   fileArray: File[],
   pinataApiKey: string,
   pinataSecretKey: string,
-  fileType?: string,
+  fileType: UploadFileType,
 ): Promise<string> => {
   console.log('Uploading to Pinata...')
-  if (fileType && fileType === 'metadata') {
-    const data = new FormData()
-    fileArray.forEach((file) => {
-      data.append('file', file, `metadata/${file.name}`)
-    })
-
-    const res = await axios.post(endpoint, data, {
-      withCredentials: true,
-      headers: {
-        pinata_api_key: pinataApiKey,
-        pinata_secret_api_key: pinataSecretKey,
-      },
-    })
-    return res.data.IpfsHash
-  }
+  console.log(fileType)
+  console.log(PINATA_ENDPOINT_URL)
   const data = new FormData()
   fileArray.forEach((file) => {
-    data.append('file', file, `images/${file.name}`)
+    data.append('file', file, `${fileType}/${file.name}`)
   })
 
-  const res = await axios.post(endpoint, data, {
+  const res = await axios.post('https://api.pinata.cloud/pinning/pinFileToIPFS', data, {
     withCredentials: true,
     headers: {
       pinata_api_key: pinataApiKey,

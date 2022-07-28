@@ -10,12 +10,14 @@ import { Conditional } from 'components/Conditional'
 import { StyledInput } from 'components/forms/StyledInput'
 import { MetadataModal } from 'components/MetadataModal'
 import { setBaseTokenUri, setImage, useCollectionStore } from 'contexts/collection'
+import { useWallet } from 'contexts/wallet'
 import type { NextPage } from 'next'
 import { NextSeo } from 'next-seo'
 import type { ChangeEvent } from 'react'
 import { useRef, useState } from 'react'
 import toast from 'react-hot-toast'
-import { serviceType, upload } from 'services/upload'
+import type { UploadServiceType } from 'services/upload'
+import { upload } from 'services/upload'
 import { withMetadata } from 'utils/layout'
 import { links } from 'utils/links'
 import { naturalCompare } from 'utils/sort'
@@ -27,10 +29,12 @@ let updatedMetadataFilesArray: File[] = []
 type UploadMethod = 'new' | 'existing'
 
 const UploadPage: NextPage = () => {
+  const wallet = useWallet()
+
   const baseTokenURI = useCollectionStore().base_token_uri
 
   const [uploadMethod, setUploadMethod] = useState<UploadMethod>('new')
-  const [uploadService, setUploadService] = useState(serviceType.NFT_Storage)
+  const [uploadService, setUploadService] = useState<UploadServiceType>('nft-storage')
   const [metadataFileArrayIndex, setMetadataFileArrayIndex] = useState(0)
   const [refreshMetadata, setRefreshMetadata] = useState(false)
   const [nftStorageApiKey, setNftStorageApiKey] = useState(
@@ -262,15 +266,15 @@ const UploadPage: NextPage = () => {
           <div className="justify-items-start mt-5 mb-3 ml-3 flex-column">
             <div className="mt-3 ml-4 form-check form-check-inline">
               <input
-                checked={uploadService === serviceType.NFT_Storage}
+                checked={uploadService === 'nft-storage'}
                 className="float-none mr-2 mb-1 w-4 h-4 align-middle bg-white checked:bg-stargaze bg-center bg-no-repeat bg-contain rounded-full border border-gray-300 checked:border-white focus:outline-none transition duration-200 appearance-none cursor-pointer form-check-input"
                 id="inlineRadio3"
                 name="inlineRadioOptions3"
                 onClick={() => {
-                  setUploadService(serviceType.NFT_Storage)
+                  setUploadService('nft-storage')
                 }}
                 type="radio"
-                value={serviceType.NFT_Storage}
+                value="nft-storage"
               />
               <label className="inline-block text-white cursor-pointer form-check-label" htmlFor="inlineRadio3">
                 Upload using NFT.Storage
@@ -279,15 +283,15 @@ const UploadPage: NextPage = () => {
 
             <div className="mt-3 ml-4 form-check form-check-inline">
               <input
-                checked={uploadService === serviceType.Pinata}
+                checked={uploadService === 'pinata'}
                 className="float-none mr-2 mb-1 w-4 h-4 align-middle bg-white checked:bg-stargaze bg-center bg-no-repeat bg-contain rounded-full border border-gray-300 checked:border-white focus:outline-none transition duration-200 appearance-none cursor-pointer form-check-input"
                 id="inlineRadio4"
                 name="inlineRadioOptions4"
                 onClick={() => {
-                  setUploadService(serviceType.Pinata)
+                  setUploadService('pinata')
                 }}
                 type="radio"
-                value={serviceType.Pinata}
+                value="pinata"
               />
               <label className="inline-block text-white cursor-pointer form-check-label" htmlFor="inlineRadio4">
                 Upload using Pinata
@@ -296,7 +300,7 @@ const UploadPage: NextPage = () => {
           </div>
 
           <div className="flex flex-col ml-8 w-1/2">
-            <Conditional test={uploadService === serviceType.NFT_Storage}>
+            <Conditional test={uploadService === 'nft-storage'}>
               <label htmlFor="nft_storage_api_key">NFT.Storage API Key</label>
               <StyledInput
                 id="nft_storage_api_key"
@@ -306,7 +310,7 @@ const UploadPage: NextPage = () => {
             </Conditional>
           </div>
           <div className="flex flex-col ml-8 w-1/2">
-            <Conditional test={uploadService === serviceType.Pinata}>
+            <Conditional test={uploadService === 'pinata'}>
               <label htmlFor="pinata-api_key">Pinata API Key</label>
               <StyledInput
                 className="flex mb-2 w-1/2"
@@ -411,7 +415,7 @@ const UploadPage: NextPage = () => {
                               htmlFor="my-modal-4"
                             >
                               <img
-                                key={4 * index}
+                                key={`image-${4 * index}`}
                                 alt="asset"
                                 className="px-1 my-1 thumbnail"
                                 src={imageFilesArray[4 * index] ? URL.createObjectURL(imageFilesArray[4 * index]) : ''}
@@ -433,7 +437,7 @@ const UploadPage: NextPage = () => {
                               htmlFor="my-modal-4"
                             >
                               <img
-                                key={4 * index + 1}
+                                key={`image-${4 * index + 1}`}
                                 alt="asset"
                                 className="px-1 my-1 thumbnail"
                                 src={
@@ -459,7 +463,7 @@ const UploadPage: NextPage = () => {
                               htmlFor="my-modal-4"
                             >
                               <img
-                                key={4 * index + 2}
+                                key={`image-${4 * index + 2}`}
                                 alt="asset"
                                 className="px-1 my-1 thumbnail"
                                 src={
@@ -485,7 +489,7 @@ const UploadPage: NextPage = () => {
                               htmlFor="my-modal-4"
                             >
                               <img
-                                key={4 * index + 3}
+                                key={`image-${4 * index + 3}`}
                                 alt={' '}
                                 className="px-1 my-1 thumbnail"
                                 src={
