@@ -10,7 +10,6 @@ import { Conditional } from 'components/Conditional'
 import { StyledInput } from 'components/forms/StyledInput'
 import { MetadataModal } from 'components/MetadataModal'
 import { setBaseTokenUri, setImage, useCollectionStore } from 'contexts/collection'
-import { useWallet } from 'contexts/wallet'
 import type { NextPage } from 'next'
 import { NextSeo } from 'next-seo'
 import type { ChangeEvent } from 'react'
@@ -25,11 +24,12 @@ let imageFilesArray: File[] = []
 let metadataFilesArray: File[] = []
 let updatedMetadataFilesArray: File[] = []
 
+type UploadMethod = 'new' | 'existing'
+
 const UploadPage: NextPage = () => {
-  const wallet = useWallet()
   const baseTokenURI = useCollectionStore().base_token_uri
 
-  const [uploadMethod, setUploadMethod] = useState('New')
+  const [uploadMethod, setUploadMethod] = useState<UploadMethod>('new')
   const [uploadService, setUploadService] = useState(serviceType.NFT_Storage)
   const [metadataFileArrayIndex, setMetadataFileArrayIndex] = useState(0)
   const [refreshMetadata, setRefreshMetadata] = useState(false)
@@ -173,12 +173,12 @@ const UploadPage: NextPage = () => {
       <div className="justify-items-start mt-5 mb-3 ml-3 flex-column">
         <div className="mt-3 ml-4 form-check form-check-inline">
           <input
-            checked={uploadMethod === 'Existing'}
+            checked={uploadMethod === 'existing'}
             className="float-none mr-2 mb-1 w-4 h-4 align-middle bg-white checked:bg-stargaze bg-center bg-no-repeat bg-contain rounded-full border border-gray-300 checked:border-white focus:outline-none transition duration-200 appearance-none cursor-pointer form-check-input"
             id="inlineRadio1"
             name="inlineRadioOptions1"
             onClick={() => {
-              setUploadMethod('Existing')
+              setUploadMethod('existing')
             }}
             type="radio"
             value="Existing"
@@ -190,12 +190,12 @@ const UploadPage: NextPage = () => {
 
         <div className="mt-3 ml-4 form-check form-check-inline">
           <input
-            checked={uploadMethod === 'New'}
+            checked={uploadMethod === 'new'}
             className="float-none mr-2 mb-1 w-4 h-4 align-middle bg-white checked:bg-stargaze bg-center bg-no-repeat bg-contain rounded-full border border-gray-300 checked:border-white focus:outline-none transition duration-200 appearance-none cursor-pointer form-check-input"
             id="inlineRadio2"
             name="inlineRadioOptions2"
             onClick={() => {
-              setUploadMethod('New')
+              setUploadMethod('new')
             }}
             type="radio"
             value="New"
@@ -215,7 +215,7 @@ const UploadPage: NextPage = () => {
 
       <hr className="border-white/20" />
 
-      {uploadMethod === 'Existing' && (
+      {uploadMethod === 'existing' && (
         <div className="ml-3 flex-column">
           <p className="my-3 ml-5">
             Though Stargaze&apos;s sg721 contract allows for off-chain metadata storage, it is recommended to use a
@@ -257,7 +257,7 @@ const UploadPage: NextPage = () => {
           </div>
         </div>
       )}
-      {uploadMethod === 'New' && (
+      {uploadMethod === 'new' && (
         <div>
           <div className="justify-items-start mt-5 mb-3 ml-3 flex-column">
             <div className="mt-3 ml-4 form-check form-check-inline">
