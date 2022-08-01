@@ -115,7 +115,7 @@ export const MetadataModal = (props: MetadataModalProps) => {
         >
           <MetadataFormGroup
             relatedAsset={props.imageFile}
-            subtitle={`Asset name: ${props.imageFile.name}`}
+            subtitle={`Asset name: ${props.imageFile?.name}`}
             title="Update Metadata"
           >
             <TextInput {...nameState} onChange={(e) => nameState.onChange(e.target.value)} />
