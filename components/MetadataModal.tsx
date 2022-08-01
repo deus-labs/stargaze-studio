@@ -134,6 +134,7 @@ export const MetadataModal = (props: MetadataModalProps) => {
               Update Metadata
             </Button>
           </MetadataFormGroup>
+
         </label>
       </label>
     </div>
