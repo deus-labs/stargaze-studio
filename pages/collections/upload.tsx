@@ -21,6 +21,8 @@ import { withMetadata } from 'utils/layout'
 import { links } from 'utils/links'
 import { naturalCompare } from 'utils/sort'
 
+import { getAssetType } from '../../utils/getAssetType'
+
 type UploadMethod = 'new' | 'existing'
 
 const UploadPage: NextPage = () => {
@@ -60,6 +62,7 @@ const UploadPage: NextPage = () => {
       reader.onload = function (e) {
         if (!e.target?.result) return toast.error('Error parsing file.')
         if (!event.target.files) return toast.error('No files selected.')
+        console.log(getAssetType(event.target.files[i].name))
         const assetFile = new File([e.target.result], event.target.files[i].name, { type: 'image/jpg' })
         setAssetFilesArray((prev) => [...prev, assetFile])
       }

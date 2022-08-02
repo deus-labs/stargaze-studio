@@ -1,4 +1,5 @@
 /* eslint-disable eslint-comments/disable-enable-pair */
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { useMetadataAttributesState } from 'components/forms/MetadataAttributes.hooks'
@@ -115,7 +116,7 @@ export const MetadataModal = (props: MetadataModalProps) => {
         >
           <MetadataFormGroup
             relatedAsset={props.assetFile}
-            subtitle={`Asset name: ${props.assetFile.name}`}
+            subtitle={`Asset filename: ${props.assetFile?.name}`}
             title="Update Metadata"
           >
             <TextInput {...nameState} onChange={(e) => nameState.onChange(e.target.value)} />
