@@ -25,7 +25,7 @@ type UploadMethod = 'new' | 'existing'
 
 const UploadPage: NextPage = () => {
   const baseTokenURI = useCollectionStore().base_token_uri
-  const [imageFilesArray, setImageFilesArray] = useState<File[]>([])
+  const [assetFilesArray, setAssetFilesArray] = useState<File[]>([])
   const [metadataFilesArray, setMetadataFilesArray] = useState<File[]>([])
   const [updatedMetadataFilesArray, setUpdatedMetadataFilesArray] = useState<File[]>([])
   const [uploadMethod, setUploadMethod] = useState<UploadMethod>('new')
@@ -39,7 +39,7 @@ const UploadPage: NextPage = () => {
   const [pinataSecretKey, setPinataSecretKey] = useState(
     '9d6f42dc01eaab15f52eac8f36cc4f0ee4184944cb3cdbcda229d06ecf877ee7',
   )
-  const imageFilesRef = useRef<HTMLInputElement>(null)
+  const assetFilesRef = useRef<HTMLInputElement>(null)
   const metadataFilesRef = useRef<HTMLInputElement>(null)
 
   const handleChangeBaseTokenUri = (event: { target: { value: React.SetStateAction<string> } }) => {
@@ -50,8 +50,8 @@ const UploadPage: NextPage = () => {
     setImage(event.target.value.toString())
   }
 
-  const selectImages = (event: ChangeEvent<HTMLInputElement>) => {
-    setImageFilesArray([])
+  const selectAssets = (event: ChangeEvent<HTMLInputElement>) => {
+    setAssetFilesArray([])
     console.log(event.target.files)
     let reader: FileReader
     if (event.target.files === null) return
@@ -60,13 +60,13 @@ const UploadPage: NextPage = () => {
       reader.onload = function (e) {
         if (!e.target?.result) return toast.error('Error parsing file.')
         if (!event.target.files) return toast.error('No files selected.')
-        const imageFile = new File([e.target.result], event.target.files[i].name, { type: 'image/jpg' })
-        setImageFilesArray((prev) => [...prev, imageFile])
+        const assetFile = new File([e.target.result], event.target.files[i].name, { type: 'image/jpg' })
+        setAssetFilesArray((prev) => [...prev, assetFile])
       }
       if (!event.target.files) return toast.error('No file selected.')
       reader.readAsArrayBuffer(event.target.files[i])
       reader.onloadend = function (e) {
-        setImageFilesArray((prev) => prev.sort((a, b) => naturalCompare(a.name, b.name)))
+        setAssetFilesArray((prev) => prev.sort((a, b) => naturalCompare(a.name, b.name)))
       }
     }
   }
@@ -74,7 +74,7 @@ const UploadPage: NextPage = () => {
   const selectMetadata = (event: ChangeEvent<HTMLInputElement>) => {
     setMetadataFilesArray([])
     setUpdatedMetadataFilesArray([])
-    console.log(imageFilesArray)
+    console.log(assetFilesArray)
     console.log(event.target.files)
     let reader: FileReader
     if (event.target.files === null) return toast.error('No files selected.')
@@ -99,31 +99,31 @@ const UploadPage: NextPage = () => {
   const updateMetadata = async () => {
     const metadataFileNames = metadataFilesArray.map((file) => file.name)
     console.log(metadataFileNames)
-    const imageFileNames = imageFilesArray.map((file) => file.name.substring(0, file.name.lastIndexOf('.')))
-    console.log(imageFileNames)
+    const assetFileNames = assetFilesArray.map((file) => file.name.substring(0, file.name.lastIndexOf('.')))
+    console.log(assetFileNames)
     //compare the two arrays to make sure they are the same
-    const areArraysEqual = metadataFileNames.every((val, index) => val === imageFileNames[index])
+    const areArraysEqual = metadataFileNames.every((val, index) => val === assetFileNames[index])
     if (!areArraysEqual) {
       return toast.error('Asset and metadata file names do not match.')
     }
 
-    console.log(imageFilesArray)
-    const imageURI = await upload(
-      imageFilesArray,
+    console.log(assetFilesArray)
+    const assetURI = await upload(
+      assetFilesArray,
       uploadService,
-      'images',
+      'assets',
       nftStorageApiKey,
       pinataApiKey,
       pinataSecretKey,
     )
-    console.log(imageURI)
+    console.log(assetURI)
     setUpdatedMetadataFilesArray([])
     let reader: FileReader
     for (let i = 0; i < metadataFilesArray.length; i++) {
       reader = new FileReader()
       reader.onload = function (e) {
         const metadataJSON = JSON.parse(e.target?.result as string)
-        metadataJSON.image = `ipfs://${imageURI}/${imageFilesArray[i].name}`
+        metadataJSON.image = `ipfs://${assetURI}/${assetFilesArray[i].name}`
         const metadataFileBlob = new Blob([JSON.stringify(metadataJSON)], {
           type: 'application/json',
         })
@@ -342,9 +342,9 @@ const UploadPage: NextPage = () => {
                 <div>
                   <label
                     className="block mt-5 mr-1 mb-1 ml-8 w-full font-bold text-white dark:text-gray-300"
-                    htmlFor="imageFiles"
+                    htmlFor="assetFiles"
                   >
-                    Image File Selection
+                    Asset Selection
                   </label>
                   <div
                     className={clsx(
@@ -358,16 +358,16 @@ const UploadPage: NextPage = () => {
                         'file:py-2 file:px-4 file:mr-4 file:bg-plumbus-light file:rounded file:border-0 cursor-pointer',
                         'before:absolute before:inset-0 before:hover:bg-white/5 before:transition',
                       )}
-                      id="imageFiles"
+                      id="assetFiles"
                       multiple
-                      onChange={selectImages}
-                      ref={imageFilesRef}
+                      onChange={selectAssets}
+                      ref={assetFilesRef}
                       type="file"
                     />
                   </div>
                 </div>
 
-                {imageFilesArray.length > 0 && (
+                {assetFilesArray.length > 0 && (
                   <div>
                     <label
                       className="block mt-5 mr-1 mb-1 ml-8 w-full font-bold text-white dark:text-gray-300"
@@ -398,9 +398,9 @@ const UploadPage: NextPage = () => {
                 )}
                 <Conditional
                   test={
-                    imageFilesArray.length > 0 &&
+                    assetFilesArray.length > 0 &&
                     metadataFilesArray.length > 0 &&
-                    imageFilesArray.length !== metadataFilesArray.length
+                    assetFilesArray.length !== metadataFilesArray.length
                   }
                 >
                   <Alert className="mt-4 ml-8 w-3/4" type="warning">
@@ -411,7 +411,7 @@ const UploadPage: NextPage = () => {
                 <div className="mt-5 ml-8">
                   <Button
                     className="mb-8 w-[120px]"
-                    isDisabled={imageFilesArray.length === 0 || imageFilesArray.length !== metadataFilesArray.length}
+                    isDisabled={assetFilesArray.length === 0 || assetFilesArray.length !== metadataFilesArray.length}
                     isWide
                     onClick={updateMetadata}
                     variant="solid"
@@ -420,19 +420,19 @@ const UploadPage: NextPage = () => {
                   </Button>
                 </div>
                 <MetadataModal
-                  imageFile={imageFilesArray[metadataFileArrayIndex]}
+                  assetFile={assetFilesArray[metadataFileArrayIndex]}
                   metadataFile={metadataFilesArray[metadataFileArrayIndex]}
                   refresher={refreshMetadata}
                   updateMetadata={updateMetadataFileArray}
                   updatedMetadataFile={updatedMetadataFilesArray[metadataFileArrayIndex]}
                 />
               </div>
-              {imageFilesArray.length > 0 && (
+              {assetFilesArray.length > 0 && (
                 <div className="mt-2 mr-10 ml-20 w-4/5 h-96 border-2 border-dashed carousel carousel-vertical rounded-box">
-                  {imageFilesArray.map((imageSource, index) => (
+                  {assetFilesArray.map((assetSource, index) => (
                     <div key={`carousel-item-${index}`} className="w-full carousel-item h-1/8">
                       <div className="grid grid-cols-4 col-auto">
-                        <Conditional test={imageFilesArray.length > 4 * index}>
+                        <Conditional test={assetFilesArray.length > 4 * index}>
                           <button
                             key={4 * index}
                             className="relative p-0 w-full h-full bg-transparent hover:bg-transparent border-0 btn modal-button"
@@ -449,12 +449,12 @@ const UploadPage: NextPage = () => {
                                 key={`image-${4 * index}`}
                                 alt="asset"
                                 className="px-1 my-1 thumbnail"
-                                src={imageFilesArray[4 * index] ? URL.createObjectURL(imageFilesArray[4 * index]) : ''}
+                                src={assetFilesArray[4 * index] ? URL.createObjectURL(assetFilesArray[4 * index]) : ''}
                               />
                             </label>
                           </button>
                         </Conditional>
-                        <Conditional test={imageFilesArray.length > 4 * index + 1}>
+                        <Conditional test={assetFilesArray.length > 4 * index + 1}>
                           <button
                             key={4 * index + 1}
                             className="relative p-0 w-full h-full bg-transparent hover:bg-transparent border-0 btn modal-button"
@@ -472,15 +472,15 @@ const UploadPage: NextPage = () => {
                                 alt="asset"
                                 className="px-1 my-1 thumbnail"
                                 src={
-                                  imageFilesArray[4 * index + 1]
-                                    ? URL.createObjectURL(imageFilesArray[4 * index + 1])
+                                  assetFilesArray[4 * index + 1]
+                                    ? URL.createObjectURL(assetFilesArray[4 * index + 1])
                                     : ''
                                 }
                               />
                             </label>
                           </button>
                         </Conditional>
-                        <Conditional test={imageFilesArray.length > 4 * index + 2}>
+                        <Conditional test={assetFilesArray.length > 4 * index + 2}>
                           <button
                             key={4 * index + 2}
                             className="relative p-0 w-full h-full bg-transparent hover:bg-transparent border-0 btn modal-button"
@@ -498,15 +498,15 @@ const UploadPage: NextPage = () => {
                                 alt="asset"
                                 className="px-1 my-1 thumbnail"
                                 src={
-                                  imageFilesArray[4 * index + 2]
-                                    ? URL.createObjectURL(imageFilesArray[4 * index + 2])
+                                  assetFilesArray[4 * index + 2]
+                                    ? URL.createObjectURL(assetFilesArray[4 * index + 2])
                                     : ''
                                 }
                               />
                             </label>
                           </button>
                         </Conditional>
-                        <Conditional test={imageFilesArray.length > 4 * index + 3}>
+                        <Conditional test={assetFilesArray.length > 4 * index + 3}>
                           <button
                             key={4 * index + 3}
                             className="relative p-0 w-full h-full bg-transparent hover:bg-transparent border-0 btn modal-button"
@@ -524,8 +524,8 @@ const UploadPage: NextPage = () => {
                                 alt={' '}
                                 className="px-1 my-1 thumbnail"
                                 src={
-                                  imageFilesArray[4 * index + 3]
-                                    ? URL.createObjectURL(imageFilesArray[4 * index + 3])
+                                  assetFilesArray[4 * index + 3]
+                                    ? URL.createObjectURL(assetFilesArray[4 * index + 3])
                                     : ''
                                 }
                               />

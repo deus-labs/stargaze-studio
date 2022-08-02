@@ -11,7 +11,7 @@ import { MetadataAttributes } from './forms/MetadataAttributes'
 import { MetadataFormGroup } from './MetadataFormGroup'
 
 export interface MetadataModalProps {
-  imageFile: File
+  assetFile: File
   metadataFile: File
   updateMetadata: (metadataFile: File) => void
   updatedMetadataFile: File
@@ -114,8 +114,8 @@ export const MetadataModal = (props: MetadataModalProps) => {
           htmlFor="temp"
         >
           <MetadataFormGroup
-            relatedAsset={props.imageFile}
-            subtitle={`Asset name: ${props.imageFile?.name}`}
+            relatedAsset={props.assetFile}
+            subtitle={`Asset name: ${props.assetFile.name}`}
             title="Update Metadata"
           >
             <TextInput {...nameState} onChange={(e) => nameState.onChange(e.target.value)} />
