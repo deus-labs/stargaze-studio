@@ -62,7 +62,6 @@ const UploadPage: NextPage = () => {
       reader.onload = function (e) {
         if (!e.target?.result) return toast.error('Error parsing file.')
         if (!event.target.files) return toast.error('No files selected.')
-        console.log(getAssetType(event.target.files[i].name))
         const assetFile = new File([e.target.result], event.target.files[i].name, { type: 'image/jpg' })
         setAssetFilesArray((prev) => [...prev, assetFile])
       }
@@ -448,12 +447,26 @@ const UploadPage: NextPage = () => {
                               className="relative p-0 w-full h-full bg-transparent hover:bg-transparent border-0 btn modal-button"
                               htmlFor="my-modal-4"
                             >
-                              <img
-                                key={`image-${4 * index}`}
-                                alt="asset"
-                                className="px-1 my-1 thumbnail"
-                                src={assetFilesArray[4 * index] ? URL.createObjectURL(assetFilesArray[4 * index]) : ''}
-                              />
+                              {getAssetType(assetFilesArray[4 * index]?.name) === 'video' && (
+                                <video
+                                  id="video"
+                                  muted
+                                  onMouseEnter={(e) => e.currentTarget.play()}
+                                  onMouseLeave={(e) => e.currentTarget.pause()}
+                                  src={URL.createObjectURL(assetFilesArray[4 * index])}
+                                />
+                              )}
+
+                              {getAssetType(assetFilesArray[4 * index]?.name) === 'image' && (
+                                <img
+                                  key={`image-${4 * index}`}
+                                  alt="asset"
+                                  className="px-1 my-1 thumbnail"
+                                  src={
+                                    assetFilesArray[4 * index] ? URL.createObjectURL(assetFilesArray[4 * index]) : ''
+                                  }
+                                />
+                              )}
                             </label>
                           </button>
                         </Conditional>
@@ -470,16 +483,28 @@ const UploadPage: NextPage = () => {
                               className="relative p-0 w-full h-full bg-transparent hover:bg-transparent border-0 btn modal-button"
                               htmlFor="my-modal-4"
                             >
-                              <img
-                                key={`image-${4 * index + 1}`}
-                                alt="asset"
-                                className="px-1 my-1 thumbnail"
-                                src={
-                                  assetFilesArray[4 * index + 1]
-                                    ? URL.createObjectURL(assetFilesArray[4 * index + 1])
-                                    : ''
-                                }
-                              />
+                              {getAssetType(assetFilesArray[4 * index + 1]?.name) === 'video' && (
+                                <video
+                                  id="video"
+                                  muted
+                                  onMouseEnter={(e) => e.currentTarget.play()}
+                                  onMouseLeave={(e) => e.currentTarget.pause()}
+                                  src={URL.createObjectURL(assetFilesArray[4 * index + 1])}
+                                />
+                              )}
+
+                              {getAssetType(assetFilesArray[4 * index + 1]?.name) === 'image' && (
+                                <img
+                                  key={`image-${4 * index + 1}`}
+                                  alt="asset"
+                                  className="px-1 my-1 thumbnail"
+                                  src={
+                                    assetFilesArray[4 * index + 1]
+                                      ? URL.createObjectURL(assetFilesArray[4 * index + 1])
+                                      : ''
+                                  }
+                                />
+                              )}
                             </label>
                           </button>
                         </Conditional>
@@ -496,16 +521,28 @@ const UploadPage: NextPage = () => {
                               className="relative p-0 w-full h-full bg-transparent hover:bg-transparent border-0 btn modal-button"
                               htmlFor="my-modal-4"
                             >
-                              <img
-                                key={`image-${4 * index + 2}`}
-                                alt="asset"
-                                className="px-1 my-1 thumbnail"
-                                src={
-                                  assetFilesArray[4 * index + 2]
-                                    ? URL.createObjectURL(assetFilesArray[4 * index + 2])
-                                    : ''
-                                }
-                              />
+                              {getAssetType(assetFilesArray[4 * index + 2]?.name) === 'video' && (
+                                <video
+                                  id="video"
+                                  muted
+                                  onMouseEnter={(e) => e.currentTarget.play()}
+                                  onMouseLeave={(e) => e.currentTarget.pause()}
+                                  src={URL.createObjectURL(assetFilesArray[4 * index + 2])}
+                                />
+                              )}
+
+                              {getAssetType(assetFilesArray[4 * index + 2]?.name) === 'image' && (
+                                <img
+                                  key={`image-${4 * index + 2}`}
+                                  alt="asset"
+                                  className="px-1 my-1 thumbnail"
+                                  src={
+                                    assetFilesArray[4 * index + 2]
+                                      ? URL.createObjectURL(assetFilesArray[4 * index + 2])
+                                      : ''
+                                  }
+                                />
+                              )}
                             </label>
                           </button>
                         </Conditional>
@@ -522,16 +559,28 @@ const UploadPage: NextPage = () => {
                               className="relative p-0 w-full h-full bg-transparent hover:bg-transparent border-0 btn modal-button"
                               htmlFor="my-modal-4"
                             >
-                              <img
-                                key={`image-${4 * index + 3}`}
-                                alt={' '}
-                                className="px-1 my-1 thumbnail"
-                                src={
-                                  assetFilesArray[4 * index + 3]
-                                    ? URL.createObjectURL(assetFilesArray[4 * index + 3])
-                                    : ''
-                                }
-                              />
+                              {getAssetType(assetFilesArray[4 * index + 3]?.name) === 'video' && (
+                                <video
+                                  id="video"
+                                  muted
+                                  onMouseEnter={(e) => e.currentTarget.play()}
+                                  onMouseLeave={(e) => e.currentTarget.pause()}
+                                  src={URL.createObjectURL(assetFilesArray[4 * index + 3])}
+                                />
+                              )}
+
+                              {getAssetType(assetFilesArray[4 * index + 3]?.name) === 'image' && (
+                                <img
+                                  key={`image-${4 * index + 3}`}
+                                  alt="asset"
+                                  className="px-1 my-1 thumbnail"
+                                  src={
+                                    assetFilesArray[4 * index + 3]
+                                      ? URL.createObjectURL(assetFilesArray[4 * index + 3])
+                                      : ''
+                                  }
+                                />
+                              )}
                             </label>
                           </button>
                         </Conditional>
