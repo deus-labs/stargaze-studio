@@ -1,4 +1,5 @@
 /* eslint-disable eslint-comments/disable-enable-pair */
+/* eslint-disable jsx-a11y/media-has-caption */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable func-names */
 
@@ -447,6 +448,15 @@ const UploadPage: NextPage = () => {
                               className="relative p-0 w-full h-full bg-transparent hover:bg-transparent border-0 btn modal-button"
                               htmlFor="my-modal-4"
                             >
+                              {getAssetType(assetFilesArray[4 * index]?.name) === 'audio' && (
+                                <audio
+                                  controls
+                                  id="audio"
+                                  onMouseEnter={(e) => e.currentTarget.play()}
+                                  onMouseLeave={(e) => e.currentTarget.pause()}
+                                  src={URL.createObjectURL(assetFilesArray[4 * index])}
+                                />
+                              )}
                               {getAssetType(assetFilesArray[4 * index]?.name) === 'video' && (
                                 <video
                                   id="video"
@@ -483,6 +493,15 @@ const UploadPage: NextPage = () => {
                               className="relative p-0 w-full h-full bg-transparent hover:bg-transparent border-0 btn modal-button"
                               htmlFor="my-modal-4"
                             >
+                              {getAssetType(assetFilesArray[4 * index + 1]?.name) === 'audio' && (
+                                <audio
+                                  controls
+                                  id="audio"
+                                  onMouseEnter={(e) => e.currentTarget.play()}
+                                  onMouseLeave={(e) => e.currentTarget.pause()}
+                                  src={URL.createObjectURL(assetFilesArray[4 * index + 1])}
+                                />
+                              )}
                               {getAssetType(assetFilesArray[4 * index + 1]?.name) === 'video' && (
                                 <video
                                   id="video"
@@ -521,6 +540,15 @@ const UploadPage: NextPage = () => {
                               className="relative p-0 w-full h-full bg-transparent hover:bg-transparent border-0 btn modal-button"
                               htmlFor="my-modal-4"
                             >
+                              {getAssetType(assetFilesArray[4 * index + 2]?.name) === 'audio' && (
+                                <audio
+                                  controls
+                                  id="audio"
+                                  onMouseEnter={(e) => e.currentTarget.play()}
+                                  onMouseLeave={(e) => e.currentTarget.pause()}
+                                  src={URL.createObjectURL(assetFilesArray[4 * index + 2])}
+                                />
+                              )}
                               {getAssetType(assetFilesArray[4 * index + 2]?.name) === 'video' && (
                                 <video
                                   id="video"
@@ -559,6 +587,15 @@ const UploadPage: NextPage = () => {
                               className="relative p-0 w-full h-full bg-transparent hover:bg-transparent border-0 btn modal-button"
                               htmlFor="my-modal-4"
                             >
+                              {getAssetType(assetFilesArray[4 * index + 3]?.name) === 'audio' && (
+                                <audio
+                                  controls
+                                  id="audio"
+                                  onMouseEnter={(e) => e.currentTarget.play()}
+                                  onMouseLeave={(e) => e.currentTarget.pause()}
+                                  src={URL.createObjectURL(assetFilesArray[4 * index + 3])}
+                                />
+                              )}
                               {getAssetType(assetFilesArray[4 * index + 3]?.name) === 'video' && (
                                 <video
                                   id="video"
