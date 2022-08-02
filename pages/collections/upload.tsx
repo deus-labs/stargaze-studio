@@ -353,7 +353,7 @@ const UploadPage: NextPage = () => {
                     )}
                   >
                     <input
-                      accept="image/*"
+                      accept="image/*, audio/*, video/*"
                       className={clsx(
                         'file:py-2 file:px-4 file:mr-4 file:bg-plumbus-light file:rounded file:border-0 cursor-pointer',
                         'before:absolute before:inset-0 before:hover:bg-white/5 before:transition',
