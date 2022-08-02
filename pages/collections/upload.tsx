@@ -1,5 +1,5 @@
 /* eslint-disable eslint-comments/disable-enable-pair */
-/* eslint-disable jsx-a11y/media-has-caption */
+
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable func-names */
 
@@ -449,13 +449,14 @@ const UploadPage: NextPage = () => {
                               htmlFor="my-modal-4"
                             >
                               {getAssetType(assetFilesArray[4 * index]?.name) === 'audio' && (
-                                <div className="relative">
-                                  <span className="relative self-center">{assetFilesArray[4 * index]?.name}</span>
-                                  <audio
-                                    id="audio"
-                                    src={URL.createObjectURL(assetFilesArray[4 * index])}
-                                    title="audio"
+                                <div className="flex relative flex-col items-center mt-2 ml-2">
+                                  <img
+                                    key={`audio-${4 * index}`}
+                                    alt="audio_icon"
+                                    className="relative mb-2 ml-1 w-6 h-6 thumbnail"
+                                    src="/audio.png"
                                   />
+                                  <span className="relative self-center">{assetFilesArray[4 * index]?.name}</span>
                                 </div>
                               )}
                               {getAssetType(assetFilesArray[4 * index]?.name) === 'video' && (
@@ -495,13 +496,14 @@ const UploadPage: NextPage = () => {
                               htmlFor="my-modal-4"
                             >
                               {getAssetType(assetFilesArray[4 * index + 1]?.name) === 'audio' && (
-                                <div className="relative">
-                                  <span>{assetFilesArray[4 * index + 1]?.name}</span>
-                                  <audio
-                                    id="audio"
-                                    src={URL.createObjectURL(assetFilesArray[4 * index + 1])}
-                                    title="audio"
+                                <div className="flex relative flex-col items-center mt-2 ml-2">
+                                  <img
+                                    key={`audio-${4 * index + 1}`}
+                                    alt="audio_icon"
+                                    className="relative mb-2 ml-1 w-6 h-6 thumbnail"
+                                    src="/audio.png"
                                   />
+                                  <span className="relative self-center">{assetFilesArray[4 * index + 1]?.name}</span>
                                 </div>
                               )}
                               {getAssetType(assetFilesArray[4 * index + 1]?.name) === 'video' && (
@@ -543,13 +545,14 @@ const UploadPage: NextPage = () => {
                               htmlFor="my-modal-4"
                             >
                               {getAssetType(assetFilesArray[4 * index + 2]?.name) === 'audio' && (
-                                <div className="relative">
-                                  <span>{assetFilesArray[4 * index + 2]?.name}</span>
-                                  <audio
-                                    id="audio"
-                                    src={URL.createObjectURL(assetFilesArray[4 * index + 2])}
-                                    title="audio"
+                                <div className="flex relative flex-col items-center mt-2 ml-2">
+                                  <img
+                                    key={`audio-${4 * index + 2}`}
+                                    alt="audio_icon"
+                                    className="relative mb-2 ml-1 w-6 h-6 thumbnail"
+                                    src="/audio.png"
                                   />
+                                  <span className="relative self-center">{assetFilesArray[4 * index + 2]?.name}</span>
                                 </div>
                               )}
                               {getAssetType(assetFilesArray[4 * index + 2]?.name) === 'video' && (
@@ -591,13 +594,14 @@ const UploadPage: NextPage = () => {
                               htmlFor="my-modal-4"
                             >
                               {getAssetType(assetFilesArray[4 * index + 3]?.name) === 'audio' && (
-                                <div className="relative">
-                                  <span>{assetFilesArray[4 * index + 3]?.name}</span>
-                                  <audio
-                                    id="audio"
-                                    src={URL.createObjectURL(assetFilesArray[4 * index + 3])}
-                                    title="audio"
+                                <div className="flex relative flex-col items-center mt-2 ml-2">
+                                  <img
+                                    key={`audio-${4 * index + 3}`}
+                                    alt="audio_icon"
+                                    className="relative mb-2 ml-1 w-6 h-6 thumbnail"
+                                    src="/audio.png"
                                   />
+                                  <span className="relative self-center">{assetFilesArray[4 * index + 3]?.name}</span>
                                 </div>
                               )}
                               {getAssetType(assetFilesArray[4 * index + 3]?.name) === 'video' && (
