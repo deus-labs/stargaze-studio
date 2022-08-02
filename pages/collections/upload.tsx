@@ -449,13 +449,14 @@ const UploadPage: NextPage = () => {
                               htmlFor="my-modal-4"
                             >
                               {getAssetType(assetFilesArray[4 * index]?.name) === 'audio' && (
-                                <audio
-                                  controls
-                                  id="audio"
-                                  onMouseEnter={(e) => e.currentTarget.play()}
-                                  onMouseLeave={(e) => e.currentTarget.pause()}
-                                  src={URL.createObjectURL(assetFilesArray[4 * index])}
-                                />
+                                <div className="relative">
+                                  <span className="relative self-center">{assetFilesArray[4 * index]?.name}</span>
+                                  <audio
+                                    id="audio"
+                                    src={URL.createObjectURL(assetFilesArray[4 * index])}
+                                    title="audio"
+                                  />
+                                </div>
                               )}
                               {getAssetType(assetFilesArray[4 * index]?.name) === 'video' && (
                                 <video
@@ -494,13 +495,14 @@ const UploadPage: NextPage = () => {
                               htmlFor="my-modal-4"
                             >
                               {getAssetType(assetFilesArray[4 * index + 1]?.name) === 'audio' && (
-                                <audio
-                                  controls
-                                  id="audio"
-                                  onMouseEnter={(e) => e.currentTarget.play()}
-                                  onMouseLeave={(e) => e.currentTarget.pause()}
-                                  src={URL.createObjectURL(assetFilesArray[4 * index + 1])}
-                                />
+                                <div className="relative">
+                                  <span>{assetFilesArray[4 * index + 1]?.name}</span>
+                                  <audio
+                                    id="audio"
+                                    src={URL.createObjectURL(assetFilesArray[4 * index + 1])}
+                                    title="audio"
+                                  />
+                                </div>
                               )}
                               {getAssetType(assetFilesArray[4 * index + 1]?.name) === 'video' && (
                                 <video
@@ -541,13 +543,14 @@ const UploadPage: NextPage = () => {
                               htmlFor="my-modal-4"
                             >
                               {getAssetType(assetFilesArray[4 * index + 2]?.name) === 'audio' && (
-                                <audio
-                                  controls
-                                  id="audio"
-                                  onMouseEnter={(e) => e.currentTarget.play()}
-                                  onMouseLeave={(e) => e.currentTarget.pause()}
-                                  src={URL.createObjectURL(assetFilesArray[4 * index + 2])}
-                                />
+                                <div className="relative">
+                                  <span>{assetFilesArray[4 * index + 2]?.name}</span>
+                                  <audio
+                                    id="audio"
+                                    src={URL.createObjectURL(assetFilesArray[4 * index + 2])}
+                                    title="audio"
+                                  />
+                                </div>
                               )}
                               {getAssetType(assetFilesArray[4 * index + 2]?.name) === 'video' && (
                                 <video
@@ -588,13 +591,14 @@ const UploadPage: NextPage = () => {
                               htmlFor="my-modal-4"
                             >
                               {getAssetType(assetFilesArray[4 * index + 3]?.name) === 'audio' && (
-                                <audio
-                                  controls
-                                  id="audio"
-                                  onMouseEnter={(e) => e.currentTarget.play()}
-                                  onMouseLeave={(e) => e.currentTarget.pause()}
-                                  src={URL.createObjectURL(assetFilesArray[4 * index + 3])}
-                                />
+                                <div className="relative">
+                                  <span>{assetFilesArray[4 * index + 3]?.name}</span>
+                                  <audio
+                                    id="audio"
+                                    src={URL.createObjectURL(assetFilesArray[4 * index + 3])}
+                                    title="audio"
+                                  />
+                                </div>
                               )}
                               {getAssetType(assetFilesArray[4 * index + 3]?.name) === 'video' && (
                                 <video
