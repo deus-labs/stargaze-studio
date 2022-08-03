@@ -1,3 +1,7 @@
+/* eslint-disable eslint-comments/disable-enable-pair */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+
 import Anchor from 'components/Anchor'
 import Button from 'components/Button'
 import {
@@ -9,6 +13,7 @@ import {
 } from 'components/collections/creation'
 import type { CollectionDetailsDataProps } from 'components/collections/creation/CollectionDetails'
 import type { MintingDetailsDataProps } from 'components/collections/creation/MintingDetails'
+import type { WhitelistDetailsDataProps } from 'components/collections/creation/WhitelistDetails'
 import type { NextPage } from 'next'
 import { NextSeo } from 'next-seo'
 import { useState } from 'react'
@@ -24,11 +29,14 @@ const UploadPage: NextPage = () => {
 
   const [collectionDetails, setCollectionDetails] = useState<CollectionDetailsDataProps | null>(null)
   const [mintingDetails, setMintingDetails] = useState<MintingDetailsDataProps | null>(null)
+  const [whitelistDetails, setWhitelistDetails] = useState<WhitelistDetailsDataProps | null>(null)
 
   const createCollection = () => {
     try {
       checkCollectionDetails()
       checkMintingDetails()
+      checkWhitelistDetails()
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error.message)
     }
@@ -47,6 +55,20 @@ const UploadPage: NextPage = () => {
     if (mintingDetails.unit_price === '') throw new Error('Price is required')
     if (mintingDetails.per_address_limit === 0) throw new Error('Per address limit is required')
     if (mintingDetails.start_time === '') throw new Error('Start time is required')
+  }
+
+  const checkWhitelistDetails = () => {
+    if (!whitelistDetails) throw new Error('Please fill out the whitelist details')
+    if (whitelistDetails.isContractAddress) {
+      if (whitelistDetails.contractAddress === '') throw new Error('Contract address is required')
+    } else {
+      if (whitelistDetails.members?.length === 0) throw new Error('Whitelist member list cannot be empty')
+      if (whitelistDetails.unit_price === '') throw new Error('Whitelist unit price is required')
+      if (whitelistDetails.start_time === '') throw new Error('Start time is required')
+      if (whitelistDetails.end_time === '') throw new Error('End time is required')
+      if (whitelistDetails.per_address_limit === 0) throw new Error('Per address limit is required')
+      if (whitelistDetails.member_limit === 0) throw new Error('Member limit is required')
+    }
   }
 
   return (
@@ -81,7 +103,7 @@ const UploadPage: NextPage = () => {
       </div>
 
       <section {...collapseProps}>
-        <WhitelistDetails />
+        <WhitelistDetails onChange={setWhitelistDetails} />
         <RoyaltyDetails />
       </section>
 
