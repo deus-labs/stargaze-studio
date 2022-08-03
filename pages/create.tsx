@@ -19,11 +19,10 @@ import { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import type { UploadServiceType } from 'services/upload'
 import { upload } from 'services/upload'
+import { getAssetType } from 'utils/getAssetType'
 import { withMetadata } from 'utils/layout'
 import { links } from 'utils/links'
 import { naturalCompare } from 'utils/sort'
-
-import { getAssetType } from '../../utils/getAssetType'
 
 type UploadMethod = 'new' | 'existing'
 
