@@ -14,8 +14,8 @@ import { setBaseTokenUri, setImage, useCollectionStore } from 'contexts/collecti
 import type { NextPage } from 'next'
 import { NextSeo } from 'next-seo'
 import type { ChangeEvent } from 'react'
-import { useRef, useState } from 'react'
-import toast from 'react-hot-toast'
+import { useState } from 'react'
+import { toast } from 'react-hot-toast'
 import type { UploadServiceType } from 'services/upload'
 import { upload } from 'services/upload'
 import { withMetadata } from 'utils/layout'
@@ -42,8 +42,6 @@ const UploadPage: NextPage = () => {
   const [pinataSecretKey, setPinataSecretKey] = useState(
     '9d6f42dc01eaab15f52eac8f36cc4f0ee4184944cb3cdbcda229d06ecf877ee7',
   )
-  const assetFilesRef = useRef<HTMLInputElement>(null)
-  const metadataFilesRef = useRef<HTMLInputElement>(null)
 
   const handleChangeBaseTokenUri = (event: { target: { value: React.SetStateAction<string> } }) => {
     setBaseTokenUri(event.target.value.toString())
@@ -364,7 +362,6 @@ const UploadPage: NextPage = () => {
                       id="assetFiles"
                       multiple
                       onChange={selectAssets}
-                      ref={assetFilesRef}
                       type="file"
                     />
                   </div>
@@ -393,7 +390,6 @@ const UploadPage: NextPage = () => {
                         id="metadataFiles"
                         multiple
                         onChange={selectMetadata}
-                        ref={metadataFilesRef}
                         type="file"
                       />
                     </div>
