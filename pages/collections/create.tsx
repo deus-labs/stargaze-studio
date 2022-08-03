@@ -23,7 +23,7 @@ import { toast } from 'react-hot-toast'
 import { withMetadata } from 'utils/layout'
 import { links } from 'utils/links'
 
-const UploadPage: NextPage = () => {
+const CollectionCreationPage: NextPage = () => {
   const { getCollapseProps, getToggleProps, isExpanded } = useCollapse()
   const toggleProps = getToggleProps()
   const collapseProps = getCollapseProps()
@@ -125,4 +125,4 @@ const UploadPage: NextPage = () => {
   )
 }
 
-export default withMetadata(UploadPage, { center: false })
+export default withMetadata(CollectionCreationPage, { center: false })
