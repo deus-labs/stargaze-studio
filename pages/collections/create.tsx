@@ -97,13 +97,12 @@ const UploadPage: NextPage = () => {
   }
   const updateMetadata = async () => {
     const metadataFileNames = metadataFilesArray.map((file) => file.name)
-    console.log(metadataFileNames)
     const assetFileNames = assetFilesArray.map((file) => file.name.substring(0, file.name.lastIndexOf('.')))
-    console.log(assetFileNames)
     //compare the two arrays to make sure they are the same
     const areArraysEqual = metadataFileNames.every((val, index) => val === assetFileNames[index])
     if (!areArraysEqual) {
-      return toast.error('Asset and metadata file names do not match.')
+      toast.error('Asset and metadata file names do not match.')
+      return
     }
 
     console.log(assetFilesArray)
