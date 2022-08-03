@@ -15,15 +15,14 @@ import { setBaseTokenUri, setImage, useCollectionStore } from 'contexts/collecti
 import type { NextPage } from 'next'
 import { NextSeo } from 'next-seo'
 import type { ChangeEvent } from 'react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import type { UploadServiceType } from 'services/upload'
 import { upload } from 'services/upload'
+import { getAssetType } from 'utils/getAssetType'
 import { withMetadata } from 'utils/layout'
 import { links } from 'utils/links'
 import { naturalCompare } from 'utils/sort'
-
-import { getAssetType } from '../../utils/getAssetType'
 
 type UploadMethod = 'new' | 'existing'
 
@@ -164,6 +163,10 @@ const UploadPage: NextPage = () => {
     console.log(JSON.parse(await metadataFilesArray[metadataFileArrayIndex]?.text()))
   }
 
+  useEffect(() => {
+    setAssetFilesArray([])
+    setMetadataFilesArray([])
+  }, [uploadMethod])
   return (
     <div>
       <NextSeo title="Create Collection" />
