@@ -31,15 +31,34 @@ export const MetadataModal = (props: MetadataModalProps) => {
       attributesState.reset()
       parsedMetadata = JSON.parse(await metadataFile.text())
 
-      for (let i = 0; i < parsedMetadata.attributes.length; i++) {
+      if (!parsedMetadata.attributes || parsedMetadata.attributes.length === 0) {
         attributesState.add({
-          trait_type: parsedMetadata.attributes[i].trait_type,
-          value: parsedMetadata.attributes[i].value,
+          trait_type: '',
+          value: '',
         })
+      } else {
+        for (let i = 0; i < parsedMetadata.attributes.length; i++) {
+          attributesState.add({
+            trait_type: parsedMetadata.attributes[i].trait_type,
+            value: parsedMetadata.attributes[i].value,
+          })
+        }
       }
-      nameState.onChange(parsedMetadata.name)
-      descriptionState.onChange(parsedMetadata.description)
-      externalUrlState.onChange(parsedMetadata.external_url)
+      if (!parsedMetadata.name) {
+        nameState.onChange('')
+      } else {
+        nameState.onChange(parsedMetadata.name)
+      }
+      if (!parsedMetadata.description) {
+        descriptionState.onChange('')
+      } else {
+        descriptionState.onChange(parsedMetadata.description)
+      }
+      if (!parsedMetadata.external_url) {
+        externalUrlState.onChange('')
+      } else {
+        externalUrlState.onChange(parsedMetadata.external_url)
+      }
 
       setMetadata(parsedMetadata)
     }
