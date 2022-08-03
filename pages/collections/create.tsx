@@ -8,6 +8,7 @@ import {
   WhitelistDetails,
 } from 'components/collections/creation'
 import type { CollectionDetailsDataProps } from 'components/collections/creation/CollectionDetails'
+import type { MintingDetailsDataProps } from 'components/collections/creation/MintingDetails'
 import type { NextPage } from 'next'
 import { NextSeo } from 'next-seo'
 import { useState } from 'react'
@@ -22,10 +23,12 @@ const UploadPage: NextPage = () => {
   const collapseProps = getCollapseProps()
 
   const [collectionDetails, setCollectionDetails] = useState<CollectionDetailsDataProps | null>(null)
+  const [mintingDetails, setMintingDetails] = useState<MintingDetailsDataProps | null>(null)
 
   const createCollection = () => {
     try {
       checkCollectionDetails()
+      checkMintingDetails()
     } catch (error: any) {
       toast.error(error.message)
     }
@@ -36,6 +39,14 @@ const UploadPage: NextPage = () => {
     if (collectionDetails.name === '') throw new Error('Name is required')
     if (collectionDetails.description === '') throw new Error('Description is required')
     if (collectionDetails.imageFile === null) throw new Error('Cover Image is required')
+  }
+
+  const checkMintingDetails = () => {
+    if (!mintingDetails) throw new Error('Please fill out the minting details')
+    if (mintingDetails.num_tokens === 0) throw new Error('Number of tokens is required')
+    if (mintingDetails.unit_price === '') throw new Error('Price is required')
+    if (mintingDetails.per_address_limit === 0) throw new Error('Per address limit is required')
+    if (mintingDetails.start_time === '') throw new Error('Start time is required')
   }
 
   return (
@@ -60,7 +71,7 @@ const UploadPage: NextPage = () => {
 
       <div className="flex justify-evenly grid-col-2">
         <CollectionDetails onChange={setCollectionDetails} />
-        <MintingDetails />
+        <MintingDetails onChange={setMintingDetails} />
       </div>
 
       <div className="flex justify-end">
