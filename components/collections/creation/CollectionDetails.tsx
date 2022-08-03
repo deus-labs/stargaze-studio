@@ -3,12 +3,23 @@ import { FormControl } from 'components/FormControl'
 import { FormGroup } from 'components/FormGroup'
 import { useInputState } from 'components/forms/FormInput.hooks'
 import type { ChangeEvent } from 'react'
-import React, { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 
 import { TextInput } from '../../forms/FormInput'
 
-export const CollectionDetails = () => {
+interface CollectionDetailsProps {
+  onChange: (data: CollectionDetailsDataProps) => void
+}
+
+export interface CollectionDetailsDataProps {
+  name: string
+  description: string
+  imageFile: File | null
+  external_image?: string
+}
+
+export const CollectionDetails = ({ onChange }: CollectionDetailsProps) => {
   const [coverImage, setCoverImage] = useState<File | null>(null)
 
   const nameState = useInputState({
@@ -31,6 +42,22 @@ export const CollectionDetails = () => {
     title: 'External Image',
     placeholder: 'https://my-collection...',
   })
+
+  useEffect(() => {
+    try {
+      const data = {
+        name: nameState.value,
+        description: descriptionState.value,
+        imageFile: coverImage,
+        externalImage: externalImageState.value === '' ? null : externalImageState.value,
+      }
+
+      onChange(data)
+    } catch (error: any) {
+      toast.error(error.message)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [nameState.value, descriptionState.value, coverImage, externalImageState.value])
 
   const selectCoverImage = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files === null) return toast.error('Error selecting cover image')

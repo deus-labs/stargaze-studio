@@ -7,20 +7,35 @@ import {
   UploadDetails,
   WhitelistDetails,
 } from 'components/collections/creation'
+import type { CollectionDetailsDataProps } from 'components/collections/creation/CollectionDetails'
 import type { NextPage } from 'next'
 import { NextSeo } from 'next-seo'
+import { useState } from 'react'
 import useCollapse from 'react-collapsed'
+import { toast } from 'react-hot-toast'
 import { withMetadata } from 'utils/layout'
 import { links } from 'utils/links'
 
 const UploadPage: NextPage = () => {
   const { getCollapseProps, getToggleProps, isExpanded } = useCollapse()
-
   const toggleProps = getToggleProps()
   const collapseProps = getCollapseProps()
 
+  const [collectionDetails, setCollectionDetails] = useState<CollectionDetailsDataProps | null>(null)
+
   const createCollection = () => {
-    console.log('create collection')
+    try {
+      checkCollectionDetails()
+    } catch (error: any) {
+      toast.error(error.message)
+    }
+  }
+
+  const checkCollectionDetails = () => {
+    if (!collectionDetails) throw new Error('Please fill out the collection details')
+    if (collectionDetails.name === '') throw new Error('Name is required')
+    if (collectionDetails.description === '') throw new Error('Description is required')
+    if (collectionDetails.imageFile === null) throw new Error('Cover Image is required')
   }
 
   return (
@@ -44,7 +59,7 @@ const UploadPage: NextPage = () => {
       <UploadDetails />
 
       <div className="flex justify-evenly grid-col-2">
-        <CollectionDetails />
+        <CollectionDetails onChange={setCollectionDetails} />
         <MintingDetails />
       </div>
 
@@ -61,7 +76,7 @@ const UploadPage: NextPage = () => {
 
       <div className="mt-5 ml-8">
         <Button className="mb-8" isWide onClick={createCollection} variant="solid">
-          Upload
+          Create Collection
         </Button>
       </div>
     </div>
