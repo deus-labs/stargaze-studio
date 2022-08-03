@@ -50,7 +50,7 @@ export const CollectionDetails = () => {
 
   return (
     <div>
-      <FormGroup subtitle="Information about your collection" title="Collection Info">
+      <FormGroup subtitle="Information about your collection" title="Collection Details">
         <TextInput {...nameState} isRequired />
         <TextInput {...descriptionState} isRequired />
         <FormControl isRequired title="Cover Image">

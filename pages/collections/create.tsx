@@ -32,7 +32,7 @@ import { getAssetType } from '../../utils/getAssetType'
 type UploadMethod = 'new' | 'existing'
 
 const UploadPage: NextPage = () => {
-  const { getCollapseProps, getToggleProps } = useCollapse()
+  const { getCollapseProps, getToggleProps, isExpanded } = useCollapse()
 
   const toggleProps = getToggleProps()
   const collapseProps = getCollapseProps()
@@ -637,7 +637,7 @@ const UploadPage: NextPage = () => {
       <MintingDetails />
       <div className="flex justify-end">
         <Button {...toggleProps} isWide type="button" variant="outline">
-          Advanced Options
+          {isExpanded ? 'Hide' : 'Show'} Advanced Details
         </Button>
       </div>
       <section {...collapseProps}>
