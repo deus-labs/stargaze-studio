@@ -7,13 +7,10 @@ import clsx from 'clsx'
 import { Alert } from 'components/Alert'
 import Anchor from 'components/Anchor'
 import Button from 'components/Button'
-import { CollectionDetails } from 'components/CollectionDetails'
+import { CollectionDetails, MintingDetails, RoyaltyDetails, WhitelistDetails } from 'components/collections/creation'
 import { Conditional } from 'components/Conditional'
 import { StyledInput } from 'components/forms/StyledInput'
 import { MetadataModal } from 'components/MetadataModal'
-import { MintingDetails } from 'components/MintingDetails'
-import { RoyaltyDetails } from 'components/RoyaltyDetails'
-import { WhitelistDetails } from 'components/WhitelistDetails'
 import { setBaseTokenUri, setImage, useCollectionStore } from 'contexts/collection'
 import type { NextPage } from 'next'
 import { NextSeo } from 'next-seo'
@@ -633,8 +630,10 @@ const UploadPage: NextPage = () => {
           </div>
         </div>
       )}
-      <CollectionDetails />
-      <MintingDetails />
+      <div className="flex justify-evenly grid-col-2">
+        <CollectionDetails />
+        <MintingDetails />
+      </div>
       <div className="flex justify-end">
         <Button {...toggleProps} isWide type="button" variant="outline">
           {isExpanded ? 'Hide' : 'Show'} Advanced Details

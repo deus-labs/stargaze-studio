@@ -4,10 +4,10 @@ import { useNumberInputState } from 'components/forms/FormInput.hooks'
 import { InputDateTime } from 'components/InputDateTime'
 import React, { useState } from 'react'
 
-import { Conditional } from './Conditional'
-import { NumberInput } from './forms/FormInput'
-import { JsonPreview } from './JsonPreview'
-import { WhitelistUpload } from './WhitelistUpload'
+import { Conditional } from '../../Conditional'
+import { NumberInput } from '../../forms/FormInput'
+import { JsonPreview } from '../../JsonPreview'
+import { WhitelistUpload } from '../../WhitelistUpload'
 
 export const WhitelistDetails = () => {
   const [wlstartDate, setwlStartDate] = useState<Date | undefined>(undefined)

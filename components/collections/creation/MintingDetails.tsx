@@ -4,7 +4,7 @@ import { useNumberInputState } from 'components/forms/FormInput.hooks'
 import { InputDateTime } from 'components/InputDateTime'
 import React, { useState } from 'react'
 
-import { NumberInput } from './forms/FormInput'
+import { NumberInput } from '../../forms/FormInput'
 
 export const MintingDetails = () => {
   const [timestamp, setTimestamp] = useState<Date | undefined>()

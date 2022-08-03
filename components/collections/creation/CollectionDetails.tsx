@@ -6,7 +6,7 @@ import type { ChangeEvent } from 'react'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 
-import { TextInput } from './forms/FormInput'
+import { TextInput } from '../../forms/FormInput'
 
 export const CollectionDetails = () => {
   const [coverImage, setCoverImage] = useState<File | null>(null)

@@ -2,7 +2,7 @@ import { FormGroup } from 'components/FormGroup'
 import { useInputState, useNumberInputState } from 'components/forms/FormInput.hooks'
 import React from 'react'
 
-import { NumberInput, TextInput } from './forms/FormInput'
+import { NumberInput, TextInput } from '../../forms/FormInput'
 
 export const RoyaltyDetails = () => {
   const royaltyPaymentAddressState = useInputState({
