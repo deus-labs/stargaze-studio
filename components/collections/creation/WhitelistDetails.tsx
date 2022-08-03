@@ -67,8 +67,8 @@ export const WhitelistDetails = ({ onChange }: WhitelistDetailsProps) => {
       per_address_limit: perAddressLimitState.value,
       member_limit: memberLimitState.value,
     }
-
     onChange(data)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [uniPriceState.value, memberLimitState.value, perAddressLimitState.value, startDate, endDate, whitelistArray])
 
   return (

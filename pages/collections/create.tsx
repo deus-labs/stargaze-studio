@@ -13,6 +13,7 @@ import {
 } from 'components/collections/creation'
 import type { CollectionDetailsDataProps } from 'components/collections/creation/CollectionDetails'
 import type { MintingDetailsDataProps } from 'components/collections/creation/MintingDetails'
+import type { RoyaltyDetailsDataProps } from 'components/collections/creation/RoyaltyDetails'
 import type { WhitelistDetailsDataProps } from 'components/collections/creation/WhitelistDetails'
 import type { NextPage } from 'next'
 import { NextSeo } from 'next-seo'
@@ -30,12 +31,14 @@ const UploadPage: NextPage = () => {
   const [collectionDetails, setCollectionDetails] = useState<CollectionDetailsDataProps | null>(null)
   const [mintingDetails, setMintingDetails] = useState<MintingDetailsDataProps | null>(null)
   const [whitelistDetails, setWhitelistDetails] = useState<WhitelistDetailsDataProps | null>(null)
+  const [royaltyDetails, setRoyaltyDetails] = useState<RoyaltyDetailsDataProps | null>(null)
 
   const createCollection = () => {
     try {
       checkCollectionDetails()
       checkMintingDetails()
       checkWhitelistDetails()
+      checkRoyaltyDetails()
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error.message)
@@ -71,6 +74,12 @@ const UploadPage: NextPage = () => {
     }
   }
 
+  const checkRoyaltyDetails = () => {
+    if (!royaltyDetails) throw new Error('Please fill out the royalty details')
+    if (royaltyDetails.share === 0) throw new Error('Royalty share is required')
+    if (royaltyDetails.payment_address === '') throw new Error('Royalty payment address is required')
+  }
+
   return (
     <div>
       <NextSeo title="Create Collection" />
@@ -104,7 +113,7 @@ const UploadPage: NextPage = () => {
 
       <section {...collapseProps}>
         <WhitelistDetails onChange={setWhitelistDetails} />
-        <RoyaltyDetails />
+        <RoyaltyDetails onChange={setRoyaltyDetails} />
       </section>
 
       <div className="mt-5 ml-8">

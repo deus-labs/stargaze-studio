@@ -1,3 +1,7 @@
+/* eslint-disable eslint-comments/disable-enable-pair */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+
 import clsx from 'clsx'
 import { FormControl } from 'components/FormControl'
 import { FormGroup } from 'components/FormGroup'
@@ -45,14 +49,14 @@ export const CollectionDetails = ({ onChange }: CollectionDetailsProps) => {
 
   useEffect(() => {
     try {
-      const data = {
+      const data: CollectionDetailsDataProps = {
         name: nameState.value,
         description: descriptionState.value,
         imageFile: coverImage,
-        externalImage: externalImageState.value === '' ? null : externalImageState.value,
+        external_image: externalImageState.value,
       }
-
       onChange(data)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error.message)
     }

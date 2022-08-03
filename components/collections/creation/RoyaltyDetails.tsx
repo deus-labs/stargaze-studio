@@ -1,10 +1,19 @@
 import { FormGroup } from 'components/FormGroup'
 import { useInputState, useNumberInputState } from 'components/forms/FormInput.hooks'
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { NumberInput, TextInput } from '../../forms/FormInput'
 
-export const RoyaltyDetails = () => {
+interface RoyaltyDetailsProps {
+  onChange: (data: RoyaltyDetailsDataProps) => void
+}
+
+export interface RoyaltyDetailsDataProps {
+  payment_address: string
+  share: number
+}
+
+export const RoyaltyDetails = ({ onChange }: RoyaltyDetailsProps) => {
   const royaltyPaymentAddressState = useInputState({
     id: 'royalty-payment-address',
     name: 'royaltyPaymentAddress',
@@ -20,6 +29,15 @@ export const RoyaltyDetails = () => {
     subtitle: 'Percentage of royalties to be paid',
     placeholder: '8',
   })
+
+  useEffect(() => {
+    const data: RoyaltyDetailsDataProps = {
+      payment_address: royaltyPaymentAddressState.value,
+      share: royaltyShareState.value,
+    }
+    onChange(data)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [royaltyPaymentAddressState.value, royaltyShareState.value])
 
   return (
     <div>

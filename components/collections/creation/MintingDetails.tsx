@@ -51,8 +51,8 @@ export const MintingDetails = ({ onChange }: MintingDetailsProps) => {
       per_address_limit: perAddressLimitState.value,
       start_time: timestamp ? (timestamp.getTime() * 1_000_000).toString() : '',
     }
-
     onChange(data)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [numberOfTokensState.value, unitPriceState.value, perAddressLimitState.value])
 
   return (
