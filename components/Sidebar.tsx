@@ -9,7 +9,7 @@ import { SidebarLayout } from './SidebarLayout'
 import { WalletLoader } from './WalletLoader'
 
 const routes = [
-  { text: 'Create Collection', href: `/collections/` },
+  { text: 'Create Collection', href: `/create` },
   { text: 'Collections', href: `/collections` },
   { text: 'Contract Dashboards', href: `/contracts/` },
 ]

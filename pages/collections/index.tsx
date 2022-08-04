@@ -20,11 +20,7 @@ const HomePage: NextPage = () => {
       <br />
 
       <div className="grid gap-8 md:grid-cols-2">
-        <HomeCard
-          className="p-4 -m-4 hover:bg-gray-500/10 rounded"
-          link="/collections/create"
-          title="Create a Collection"
-        >
+        <HomeCard className="p-4 -m-4 hover:bg-gray-500/10 rounded" link="/create" title="Create a Collection">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit.
         </HomeCard>
         <HomeCard
