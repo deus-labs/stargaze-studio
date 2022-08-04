@@ -140,6 +140,11 @@ export const UploadDetails = ({ onChange }: UploadDetailsProps) => {
     }
   }, [assetFilesArray, metadataFilesArray])
 
+  useEffect(() => {
+    setAssetFilesArray([])
+    setMetadataFilesArray([])
+  }, [uploadMethod])
+
   return (
     <div>
       <div className="justify-items-start mt-5 mb-3 ml-3 flex-column">
