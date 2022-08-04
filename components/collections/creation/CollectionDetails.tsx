@@ -19,8 +19,8 @@ interface CollectionDetailsProps {
 export interface CollectionDetailsDataProps {
   name: string
   description: string
-  imageFile: File | null
-  external_image?: string
+  imageFile: File[]
+  externalLink?: string
 }
 
 export const CollectionDetails = ({ onChange }: CollectionDetailsProps) => {
@@ -40,10 +40,10 @@ export const CollectionDetails = ({ onChange }: CollectionDetailsProps) => {
     placeholder: 'My Awesome Collection Description',
   })
 
-  const externalImageState = useInputState({
-    id: 'externalImage',
-    name: 'externalImage',
-    title: 'External Image',
+  const externalLinkState = useInputState({
+    id: 'external-link',
+    name: 'externalLink',
+    title: 'External Link',
     placeholder: 'https://my-collection...',
   })
 
@@ -52,8 +52,8 @@ export const CollectionDetails = ({ onChange }: CollectionDetailsProps) => {
       const data: CollectionDetailsDataProps = {
         name: nameState.value,
         description: descriptionState.value,
-        imageFile: coverImage,
-        external_image: externalImageState.value,
+        imageFile: coverImage ? [coverImage] : [],
+        externalLink: externalLinkState.value,
       }
       onChange(data)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -61,7 +61,7 @@ export const CollectionDetails = ({ onChange }: CollectionDetailsProps) => {
       toast.error(error.message)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [nameState.value, descriptionState.value, coverImage, externalImageState.value])
+  }, [nameState.value, descriptionState.value, coverImage, externalLinkState.value])
 
   const selectCoverImage = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files === null) return toast.error('Error selecting cover image')
@@ -101,7 +101,7 @@ export const CollectionDetails = ({ onChange }: CollectionDetailsProps) => {
             </div>
           )}
         </FormControl>
-        <TextInput {...externalImageState} />
+        <TextInput {...externalLinkState} />
       </FormGroup>
     </div>
   )

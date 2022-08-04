@@ -9,7 +9,7 @@ interface RoyaltyDetailsProps {
 }
 
 export interface RoyaltyDetailsDataProps {
-  payment_address: string
+  paymentAddress: string
   share: number
 }
 
@@ -32,7 +32,7 @@ export const RoyaltyDetails = ({ onChange }: RoyaltyDetailsProps) => {
 
   useEffect(() => {
     const data: RoyaltyDetailsDataProps = {
-      payment_address: royaltyPaymentAddressState.value,
+      paymentAddress: royaltyPaymentAddressState.value,
       share: royaltyShareState.value,
     }
     onChange(data)

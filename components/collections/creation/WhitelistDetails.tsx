@@ -17,11 +17,11 @@ export interface WhitelistDetailsDataProps {
   isContractAddress: boolean
   contractAddress?: string
   members?: string[]
-  unit_price?: string
-  start_time?: string
-  end_time?: string
-  per_address_limit?: number
-  member_limit?: number
+  unitPrice?: string
+  startTime?: string
+  endTime?: string
+  perAddressLimit?: number
+  memberLimit?: number
 }
 
 export const WhitelistDetails = ({ onChange }: WhitelistDetailsProps) => {
@@ -60,12 +60,13 @@ export const WhitelistDetails = ({ onChange }: WhitelistDetailsProps) => {
   useEffect(() => {
     const data: WhitelistDetailsDataProps = {
       isContractAddress: false,
+      contractAddress: '',
       members: whitelistArray,
-      unit_price: uniPriceState.value ? (Number(uniPriceState.value) * 1_000_000).toString() : '',
-      start_time: startDate ? (startDate.getTime() * 1_000_000).toString() : '',
-      end_time: endDate ? (endDate.getTime() * 1_000_000).toString() : '',
-      per_address_limit: perAddressLimitState.value,
-      member_limit: memberLimitState.value,
+      unitPrice: uniPriceState.value ? (Number(uniPriceState.value) * 1_000_000).toString() : '',
+      startTime: startDate ? (startDate.getTime() * 1_000_000).toString() : '',
+      endTime: endDate ? (endDate.getTime() * 1_000_000).toString() : '',
+      perAddressLimit: perAddressLimitState.value,
+      memberLimit: memberLimitState.value,
     }
     onChange(data)
     // eslint-disable-next-line react-hooks/exhaustive-deps

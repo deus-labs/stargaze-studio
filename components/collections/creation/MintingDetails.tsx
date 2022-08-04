@@ -11,10 +11,10 @@ interface MintingDetailsProps {
 }
 
 export interface MintingDetailsDataProps {
-  num_tokens: number
-  unit_price: string
-  per_address_limit: number
-  start_time: string
+  numTokens: number
+  unitPrice: string
+  perAddressLimit: number
+  startTime: string
 }
 
 export const MintingDetails = ({ onChange }: MintingDetailsProps) => {
@@ -46,14 +46,14 @@ export const MintingDetails = ({ onChange }: MintingDetailsProps) => {
 
   useEffect(() => {
     const data: MintingDetailsDataProps = {
-      num_tokens: numberOfTokensState.value,
-      unit_price: unitPriceState.value ? (Number(unitPriceState.value) * 1_000_000).toString() : '',
-      per_address_limit: perAddressLimitState.value,
-      start_time: timestamp ? (timestamp.getTime() * 1_000_000).toString() : '',
+      numTokens: numberOfTokensState.value,
+      unitPrice: unitPriceState.value ? (Number(unitPriceState.value) * 1_000_000).toString() : '',
+      perAddressLimit: perAddressLimitState.value,
+      startTime: timestamp ? (timestamp.getTime() * 1_000_000).toString() : '',
     }
     onChange(data)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [numberOfTokensState.value, unitPriceState.value, perAddressLimitState.value])
+  }, [numberOfTokensState.value, unitPriceState.value, perAddressLimitState.value, timestamp])
 
   return (
     <div>

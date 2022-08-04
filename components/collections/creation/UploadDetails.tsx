@@ -6,16 +6,28 @@ import { StyledInput } from 'components/forms/StyledInput'
 import { MetadataModal } from 'components/MetadataModal'
 import { setBaseTokenUri, setImage, useCollectionStore } from 'contexts/collection'
 import type { ChangeEvent } from 'react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import type { UploadServiceType } from 'services/upload'
-import { upload } from 'services/upload'
 import { getAssetType } from 'utils/getAssetType'
 import { naturalCompare } from 'utils/sort'
 
 type UploadMethod = 'new' | 'existing'
 
-export const UploadDetails = () => {
+interface UploadDetailsProps {
+  onChange: (value: UploadDetailsDataProps) => void
+}
+
+export interface UploadDetailsDataProps {
+  assetFiles: File[]
+  metadataFiles: File[]
+  uploadService: UploadServiceType
+  nftStorageApiKey?: string
+  pinataApiKey?: string
+  pinataSecretKey?: string
+}
+
+export const UploadDetails = ({ onChange }: UploadDetailsProps) => {
   const baseTokenURI = useCollectionStore().base_token_uri
   const [assetFilesArray, setAssetFilesArray] = useState<File[]>([])
   const [metadataFilesArray, setMetadataFilesArray] = useState<File[]>([])
@@ -23,6 +35,7 @@ export const UploadDetails = () => {
   const [uploadMethod, setUploadMethod] = useState<UploadMethod>('new')
   const [uploadService, setUploadService] = useState<UploadServiceType>('nft-storage')
   const [metadataFileArrayIndex, setMetadataFileArrayIndex] = useState(0)
+
   const [refreshMetadata, setRefreshMetadata] = useState(false)
   const [nftStorageApiKey, setNftStorageApiKey] = useState(
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDJBODk5OGI4ZkE2YTM1NzMyYmMxQTRDQzNhOUU2M0Y2NUM3ZjA1RWIiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY1NTE5MTcwNDQ2MiwibmFtZSI6IlRlc3QifQ.IbdV_26bkPHSdd81sxox5AoG-5a4CCEY4aCrdbCXwAE',
@@ -42,6 +55,8 @@ export const UploadDetails = () => {
 
   const selectAssets = (event: ChangeEvent<HTMLInputElement>) => {
     setAssetFilesArray([])
+    setMetadataFilesArray([])
+    setUpdatedMetadataFilesArray([])
     console.log(event.target.files)
     let reader: FileReader
     if (event.target.files === null) return
@@ -86,63 +101,6 @@ export const UploadDetails = () => {
       }
     }
   }
-  const updateMetadata = async () => {
-    const metadataFileNames = metadataFilesArray.map((file) => file.name)
-    console.log(metadataFileNames)
-    const assetFileNames = assetFilesArray.map((file) => file.name.substring(0, file.name.lastIndexOf('.')))
-    console.log(assetFileNames)
-    //compare the two arrays to make sure they are the same
-    const areArraysEqual = metadataFileNames.every((val, index) => val === assetFileNames[index])
-    if (!areArraysEqual) {
-      return toast.error('Asset and metadata file names do not match.')
-    }
-
-    console.log(assetFilesArray)
-    const assetURI = await upload(
-      assetFilesArray,
-      uploadService,
-      'assets',
-      nftStorageApiKey,
-      pinataApiKey,
-      pinataSecretKey,
-    )
-    console.log(assetURI)
-    setUpdatedMetadataFilesArray([])
-    let reader: FileReader
-    for (let i = 0; i < metadataFilesArray.length; i++) {
-      reader = new FileReader()
-      reader.onload = (e) => {
-        const metadataJSON: any = JSON.parse(e.target?.result as string)
-        metadataJSON.image = `ipfs://${assetURI}/${assetFilesArray[i].name}`
-        const metadataFileBlob = new Blob([JSON.stringify(metadataJSON)], {
-          type: 'application/json',
-        })
-        const updatedMetadataFile = new File([metadataFileBlob], metadataFilesArray[i].name, {
-          type: 'application/json',
-        })
-        updatedMetadataFilesArray.push(updatedMetadataFile)
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        console.log(`${updatedMetadataFile.name} => ${metadataJSON.image}`)
-        if (i === metadataFilesArray.length - 1) {
-          void uploadUpdatedMetadata()
-        }
-      }
-      reader.readAsText(metadataFilesArray[i], 'utf8')
-    }
-  }
-  const uploadUpdatedMetadata = async () => {
-    setUpdatedMetadataFilesArray(updatedMetadataFilesArray)
-    const result = await upload(
-      updatedMetadataFilesArray,
-      uploadService,
-      'metadata',
-      nftStorageApiKey,
-      pinataApiKey,
-      pinataSecretKey,
-    )
-    setBaseTokenUri(`ipfs://${result}`)
-    console.log(`ipfs://${result}`)
-  }
 
   const updateMetadataFileIndex = (index: number) => {
     setMetadataFileArrayIndex(index)
@@ -154,6 +112,33 @@ export const UploadDetails = () => {
     console.log('Updated Metadata File:')
     console.log(JSON.parse(await metadataFilesArray[metadataFileArrayIndex]?.text()))
   }
+
+  const checkAssetMetadataMatch = () => {
+    const metadataFileNames = metadataFilesArray.map((file) => file.name)
+    const assetFileNames = assetFilesArray.map((file) => file.name.substring(0, file.name.lastIndexOf('.')))
+    // Compare the two arrays to make sure they are the same
+    const areArraysEqual = metadataFileNames.every((val, index) => val === assetFileNames[index])
+    if (!areArraysEqual) {
+      throw new Error('Asset and metadata file names do not match.')
+    }
+  }
+
+  useEffect(() => {
+    try {
+      checkAssetMetadataMatch()
+      const data: UploadDetailsDataProps = {
+        assetFiles: assetFilesArray,
+        metadataFiles: metadataFilesArray,
+        uploadService,
+        nftStorageApiKey,
+        pinataApiKey,
+        pinataSecretKey,
+      }
+      onChange(data)
+    } catch (error: any) {
+      toast.error(error.message)
+    }
+  }, [assetFilesArray, metadataFilesArray])
 
   return (
     <div>
