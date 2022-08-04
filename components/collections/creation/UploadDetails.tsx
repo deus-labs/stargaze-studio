@@ -85,9 +85,11 @@ export const UploadDetails = ({ onChange }: UploadDetailsProps) => {
     if (event.target.files === null) return toast.error('No files selected.')
     for (let i = 0; i < event.target.files.length; i++) {
       reader = new FileReader()
-      reader.onload = (e) => {
+      reader.onload = async (e) => {
         if (!e.target?.result) return toast.error('Error parsing file.')
         if (!event.target.files) return toast.error('No files selected.')
+        if (!JSON.parse(await event.target.files[i].text()).attributes)
+          return toast.error(`The file with name '${event.target.files[i].name}' doesn't have an attributes list!`)
         const metadataFile = new File([e.target.result], event.target.files[i].name, { type: 'application/json' })
         setMetadataFilesArray((prev) => [...prev, metadataFile])
       }
