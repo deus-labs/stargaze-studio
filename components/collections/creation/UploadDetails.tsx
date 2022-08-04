@@ -303,6 +303,18 @@ export const UploadDetails = ({ onChange }: UploadDetailsProps) => {
               <div className="mt-6">
                 <div className="grid grid-cols-2">
                   <div className="w-full">
+                    <Conditional
+                      test={
+                        assetFilesArray.length > 0 &&
+                        metadataFilesArray.length > 0 &&
+                        assetFilesArray.length !== metadataFilesArray.length
+                      }
+                    >
+                      <Alert className="mt-4 ml-8 w-3/4" type="warning">
+                        The number of assets and metadata files should match.
+                      </Alert>
+                    </Conditional>
+
                     <div>
                       <label
                         className="block mt-5 mr-1 mb-1 ml-8 w-full font-bold text-white dark:text-gray-300"
@@ -358,17 +370,6 @@ export const UploadDetails = ({ onChange }: UploadDetailsProps) => {
                         </div>
                       </div>
                     )}
-                    <Conditional
-                      test={
-                        assetFilesArray.length > 0 &&
-                        metadataFilesArray.length > 0 &&
-                        assetFilesArray.length !== metadataFilesArray.length
-                      }
-                    >
-                      <Alert className="mt-4 ml-8 w-3/4" type="warning">
-                        The number of assets and metadata files should match.
-                      </Alert>
-                    </Conditional>
 
                     <MetadataModal
                       assetFile={assetFilesArray[metadataFileArrayIndex]}
@@ -378,218 +379,56 @@ export const UploadDetails = ({ onChange }: UploadDetailsProps) => {
                       updatedMetadataFile={updatedMetadataFilesArray[metadataFileArrayIndex]}
                     />
                   </div>
-                  {assetFilesArray.length > 0 && (
-                    <div className="mt-2 mr-10 ml-20 w-4/5 h-96 border-2 border-dashed carousel carousel-vertical rounded-box">
+
+                  <Conditional test={assetFilesArray.length > 0}>
+                    <div className="overflow-auto mt-2 mr-10 ml-20 w-4/5 h-96">
                       {assetFilesArray.map((assetSource, index) => (
-                        <div key={`carousel-item-${index}`} className="w-full carousel-item h-1/8">
-                          <div className="grid grid-cols-4 col-auto">
-                            <Conditional test={assetFilesArray.length > 4 * index}>
-                              <button
-                                key={4 * index}
-                                className="relative p-0 w-full h-full bg-transparent hover:bg-transparent border-0 btn modal-button"
-                                onClick={() => {
-                                  updateMetadataFileIndex(4 * index)
-                                }}
-                                type="button"
-                              >
-                                <label
-                                  className="relative p-0 w-full h-full bg-transparent hover:bg-transparent border-0 btn modal-button"
-                                  htmlFor="my-modal-4"
-                                >
-                                  {getAssetType(assetFilesArray[4 * index]?.name) === 'audio' && (
-                                    <div className="flex relative flex-col items-center mt-2 ml-2">
-                                      <img
-                                        key={`audio-${4 * index}`}
-                                        alt="audio_icon"
-                                        className="relative mb-2 ml-1 w-6 h-6 thumbnail"
-                                        src="/audio.png"
-                                      />
-                                      <span className="relative self-center">{assetFilesArray[4 * index]?.name}</span>
-                                    </div>
-                                  )}
-                                  {getAssetType(assetFilesArray[4 * index]?.name) === 'video' && (
-                                    <video
-                                      id="video"
-                                      muted
-                                      onMouseEnter={(e) => e.currentTarget.play()}
-                                      onMouseLeave={(e) => e.currentTarget.pause()}
-                                      src={URL.createObjectURL(assetFilesArray[4 * index])}
-                                    />
-                                  )}
+                        <button
+                          key={assetSource.name}
+                          className="relative p-0 w-[100px] h-[100px] bg-transparent hover:bg-transparent border-0 btn modal-button"
+                          onClick={() => {
+                            updateMetadataFileIndex(index)
+                          }}
+                          type="button"
+                        >
+                          <label
+                            className="relative p-0 w-full h-full bg-transparent hover:bg-transparent border-0 btn modal-button"
+                            htmlFor="my-modal-4"
+                          >
+                            {getAssetType(assetSource.name) === 'audio' && (
+                              <div className="flex relative flex-col items-center mt-2 ml-2">
+                                <img
+                                  key={`audio-${index}`}
+                                  alt="audio_icon"
+                                  className="relative mb-2 ml-1 w-6 h-6 thumbnail"
+                                  src="/audio.png"
+                                />
+                                <span className="relative self-center">{assetSource.name}</span>
+                              </div>
+                            )}
+                            {getAssetType(assetSource.name) === 'video' && (
+                              <video
+                                id="video"
+                                muted
+                                onMouseEnter={(e) => e.currentTarget.play()}
+                                onMouseLeave={(e) => e.currentTarget.pause()}
+                                src={URL.createObjectURL(assetSource)}
+                              />
+                            )}
 
-                                  {getAssetType(assetFilesArray[4 * index]?.name) === 'image' && (
-                                    <img
-                                      key={`image-${4 * index}`}
-                                      alt="asset"
-                                      className="px-1 my-1 thumbnail"
-                                      src={
-                                        assetFilesArray[4 * index]
-                                          ? URL.createObjectURL(assetFilesArray[4 * index])
-                                          : ''
-                                      }
-                                    />
-                                  )}
-                                </label>
-                              </button>
-                            </Conditional>
-                            <Conditional test={assetFilesArray.length > 4 * index + 1}>
-                              <button
-                                key={4 * index + 1}
-                                className="relative p-0 w-full h-full bg-transparent hover:bg-transparent border-0 btn modal-button"
-                                onClick={() => {
-                                  updateMetadataFileIndex(4 * index + 1)
-                                }}
-                                type="button"
-                              >
-                                <label
-                                  className="relative p-0 w-full h-full bg-transparent hover:bg-transparent border-0 btn modal-button"
-                                  htmlFor="my-modal-4"
-                                >
-                                  {getAssetType(assetFilesArray[4 * index + 1]?.name) === 'audio' && (
-                                    <div className="flex relative flex-col items-center mt-2 ml-2">
-                                      <img
-                                        key={`audio-${4 * index + 1}`}
-                                        alt="audio_icon"
-                                        className="relative mb-2 ml-1 w-6 h-6 thumbnail"
-                                        src="/audio.png"
-                                      />
-                                      <span className="relative self-center">
-                                        {assetFilesArray[4 * index + 1]?.name}
-                                      </span>
-                                    </div>
-                                  )}
-                                  {getAssetType(assetFilesArray[4 * index + 1]?.name) === 'video' && (
-                                    <video
-                                      id="video"
-                                      muted
-                                      onMouseEnter={(e) => e.currentTarget.play()}
-                                      onMouseLeave={(e) => e.currentTarget.pause()}
-                                      src={URL.createObjectURL(assetFilesArray[4 * index + 1])}
-                                    />
-                                  )}
-
-                                  {getAssetType(assetFilesArray[4 * index + 1]?.name) === 'image' && (
-                                    <img
-                                      key={`image-${4 * index + 1}`}
-                                      alt="asset"
-                                      className="px-1 my-1 thumbnail"
-                                      src={
-                                        assetFilesArray[4 * index + 1]
-                                          ? URL.createObjectURL(assetFilesArray[4 * index + 1])
-                                          : ''
-                                      }
-                                    />
-                                  )}
-                                </label>
-                              </button>
-                            </Conditional>
-                            <Conditional test={assetFilesArray.length > 4 * index + 2}>
-                              <button
-                                key={4 * index + 2}
-                                className="relative p-0 w-full h-full bg-transparent hover:bg-transparent border-0 btn modal-button"
-                                onClick={() => {
-                                  updateMetadataFileIndex(4 * index + 2)
-                                }}
-                                type="button"
-                              >
-                                <label
-                                  className="relative p-0 w-full h-full bg-transparent hover:bg-transparent border-0 btn modal-button"
-                                  htmlFor="my-modal-4"
-                                >
-                                  {getAssetType(assetFilesArray[4 * index + 2]?.name) === 'audio' && (
-                                    <div className="flex relative flex-col items-center mt-2 ml-2">
-                                      <img
-                                        key={`audio-${4 * index + 2}`}
-                                        alt="audio_icon"
-                                        className="relative mb-2 ml-1 w-6 h-6 thumbnail"
-                                        src="/audio.png"
-                                      />
-                                      <span className="relative self-center">
-                                        {assetFilesArray[4 * index + 2]?.name}
-                                      </span>
-                                    </div>
-                                  )}
-                                  {getAssetType(assetFilesArray[4 * index + 2]?.name) === 'video' && (
-                                    <video
-                                      id="video"
-                                      muted
-                                      onMouseEnter={(e) => e.currentTarget.play()}
-                                      onMouseLeave={(e) => e.currentTarget.pause()}
-                                      src={URL.createObjectURL(assetFilesArray[4 * index + 2])}
-                                    />
-                                  )}
-
-                                  {getAssetType(assetFilesArray[4 * index + 2]?.name) === 'image' && (
-                                    <img
-                                      key={`image-${4 * index + 2}`}
-                                      alt="asset"
-                                      className="px-1 my-1 thumbnail"
-                                      src={
-                                        assetFilesArray[4 * index + 2]
-                                          ? URL.createObjectURL(assetFilesArray[4 * index + 2])
-                                          : ''
-                                      }
-                                    />
-                                  )}
-                                </label>
-                              </button>
-                            </Conditional>
-                            <Conditional test={assetFilesArray.length > 4 * index + 3}>
-                              <button
-                                key={4 * index + 3}
-                                className="relative p-0 w-full h-full bg-transparent hover:bg-transparent border-0 btn modal-button"
-                                onClick={() => {
-                                  updateMetadataFileIndex(4 * index + 3)
-                                }}
-                                type="button"
-                              >
-                                <label
-                                  className="relative p-0 w-full h-full bg-transparent hover:bg-transparent border-0 btn modal-button"
-                                  htmlFor="my-modal-4"
-                                >
-                                  {getAssetType(assetFilesArray[4 * index + 3]?.name) === 'audio' && (
-                                    <div className="flex relative flex-col items-center mt-2 ml-2">
-                                      <img
-                                        key={`audio-${4 * index + 3}`}
-                                        alt="audio_icon"
-                                        className="relative mb-2 ml-1 w-6 h-6 thumbnail"
-                                        src="/audio.png"
-                                      />
-                                      <span className="relative self-center">
-                                        {assetFilesArray[4 * index + 3]?.name}
-                                      </span>
-                                    </div>
-                                  )}
-                                  {getAssetType(assetFilesArray[4 * index + 3]?.name) === 'video' && (
-                                    <video
-                                      id="video"
-                                      muted
-                                      onMouseEnter={(e) => e.currentTarget.play()}
-                                      onMouseLeave={(e) => e.currentTarget.pause()}
-                                      src={URL.createObjectURL(assetFilesArray[4 * index + 3])}
-                                    />
-                                  )}
-
-                                  {getAssetType(assetFilesArray[4 * index + 3]?.name) === 'image' && (
-                                    <img
-                                      key={`image-${4 * index + 3}`}
-                                      alt="asset"
-                                      className="px-1 my-1 thumbnail"
-                                      src={
-                                        assetFilesArray[4 * index + 3]
-                                          ? URL.createObjectURL(assetFilesArray[4 * index + 3])
-                                          : ''
-                                      }
-                                    />
-                                  )}
-                                </label>
-                              </button>
-                            </Conditional>
-                          </div>
-                        </div>
+                            {getAssetType(assetSource.name) === 'image' && (
+                              <img
+                                key={`image-${index}`}
+                                alt="asset"
+                                className="px-1 my-1 thumbnail"
+                                src={URL.createObjectURL(assetSource)}
+                              />
+                            )}
+                          </label>
+                        </button>
                       ))}
                     </div>
-                  )}
+                  </Conditional>
                 </div>
               </div>
             </div>
