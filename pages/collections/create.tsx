@@ -259,28 +259,27 @@ const CollectionCreationPage: NextPage = () => {
         </p>
       </div>
 
-      <UploadDetails onChange={setUploadDetails} />
+      <div className="mx-10">
+        <UploadDetails onChange={setUploadDetails} />
 
-      <div className="flex justify-evenly grid-col-2">
-        <CollectionDetails onChange={setCollectionDetails} />
-        <MintingDetails onChange={setMintingDetails} />
-      </div>
+        <div className="flex justify-between py-3 px-8 rounded border border-2 border-white/20 grid-col-2">
+          <CollectionDetails onChange={setCollectionDetails} />
+          <MintingDetails onChange={setMintingDetails} />
+        </div>
 
-      <div className="flex justify-end">
-        <Button {...toggleProps} isWide type="button" variant="outline">
-          {isExpanded ? 'Hide' : 'Show'} Advanced Details
-        </Button>
-      </div>
+        <div className="flex justify-between my-6">
+          <Button {...toggleProps} isWide type="button" variant="outline">
+            {isExpanded ? 'Hide' : 'Show'} Advanced Details
+          </Button>
+          <Button isWide onClick={createCollection} variant="solid">
+            Create Collection
+          </Button>
+        </div>
 
-      <section {...collapseProps}>
-        <WhitelistDetails onChange={setWhitelistDetails} />
-        <RoyaltyDetails onChange={setRoyaltyDetails} />
-      </section>
-
-      <div className="mt-5 ml-8">
-        <Button className="mb-8" isWide onClick={createCollection} variant="solid">
-          Create Collection
-        </Button>
+        <section {...collapseProps} className="mb-10">
+          <WhitelistDetails onChange={setWhitelistDetails} />
+          <RoyaltyDetails onChange={setRoyaltyDetails} />
+        </section>
       </div>
     </div>
   )
