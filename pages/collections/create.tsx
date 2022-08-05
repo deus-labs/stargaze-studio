@@ -105,7 +105,7 @@ const CollectionCreationPage: NextPage = () => {
     if (!minterContract) throw new Error('Contract not found')
 
     let royaltyInfo = null
-    if (royaltyDetails?.paymentAddress && royaltyDetails.share) {
+    if (royaltyDetails?.royaltyType === 'new') {
       royaltyInfo = {
         paymentAddress: royaltyDetails.paymentAddress,
         share: royaltyDetails.share,
@@ -225,8 +225,8 @@ const CollectionCreationPage: NextPage = () => {
 
   const checkWhitelistDetails = () => {
     if (!whitelistDetails) throw new Error('Please fill out the whitelist details')
-    if (whitelistDetails.isContractAddress) {
-      if (whitelistDetails.contractAddress === '') throw new Error('Contract address is required')
+    if (whitelistDetails.whitelistType === 'existing') {
+      if (whitelistDetails.contractAddress === '') throw new Error('Whitelist contract address is required')
     } else {
       if (whitelistDetails.members?.length === 0) throw new Error('Whitelist member list cannot be empty')
       if (whitelistDetails.unitPrice === '') throw new Error('Whitelist unit price is required')
@@ -239,8 +239,10 @@ const CollectionCreationPage: NextPage = () => {
 
   const checkRoyaltyDetails = () => {
     if (!royaltyDetails) throw new Error('Please fill out the royalty details')
-    if (royaltyDetails.share === 0) throw new Error('Royalty share is required')
-    if (royaltyDetails.paymentAddress === '') throw new Error('Royalty payment address is required')
+    if (royaltyDetails.royaltyType === 'new') {
+      if (royaltyDetails.share === 0) throw new Error('Royalty share is required')
+      if (royaltyDetails.paymentAddress === '') throw new Error('Royalty payment address is required')
+    }
   }
 
   return (
@@ -262,7 +264,7 @@ const CollectionCreationPage: NextPage = () => {
       <div className="mx-10">
         <UploadDetails onChange={setUploadDetails} />
 
-        <div className="flex justify-between py-3 px-8 rounded border border-2 border-white/20 grid-col-2">
+        <div className="flex justify-between py-3 px-8 rounded border-2 border-white/20 grid-col-2">
           <CollectionDetails onChange={setCollectionDetails} />
           <MintingDetails onChange={setMintingDetails} />
         </div>
@@ -278,6 +280,7 @@ const CollectionCreationPage: NextPage = () => {
 
         <section {...collapseProps} className="mb-10">
           <WhitelistDetails onChange={setWhitelistDetails} />
+          <div className="my-6" />
           <RoyaltyDetails onChange={setRoyaltyDetails} />
         </section>
       </div>

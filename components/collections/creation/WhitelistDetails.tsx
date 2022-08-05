@@ -27,7 +27,7 @@ export interface WhitelistDetailsDataProps {
 type WhitelistState = 'none' | 'existing' | 'new'
 
 export const WhitelistDetails = ({ onChange }: WhitelistDetailsProps) => {
-  const [whitelistState, setWhitelistState] = useState<WhitelistState>('new')
+  const [whitelistState, setWhitelistState] = useState<WhitelistState>('none')
   const [startDate, setStartDate] = useState<Date | undefined>(undefined)
   const [endDate, setEndDate] = useState<Date | undefined>(undefined)
   const [whitelistArray, setWhitelistArray] = useState<string[]>([])
