@@ -1,11 +1,11 @@
 import { FormControl } from 'components/FormControl'
 import { FormGroup } from 'components/FormGroup'
-import { useNumberInputState } from 'components/forms/FormInput.hooks'
+import { useInputState, useNumberInputState } from 'components/forms/FormInput.hooks'
 import { InputDateTime } from 'components/InputDateTime'
 import React, { useEffect, useState } from 'react'
 
 import { Conditional } from '../../Conditional'
-import { NumberInput } from '../../forms/FormInput'
+import { AddressInput, NumberInput } from '../../forms/FormInput'
 import { JsonPreview } from '../../JsonPreview'
 import { WhitelistUpload } from '../../WhitelistUpload'
 
@@ -14,7 +14,7 @@ interface WhitelistDetailsProps {
 }
 
 export interface WhitelistDetailsDataProps {
-  isContractAddress: boolean
+  whitelistType: WhitelistState
   contractAddress?: string
   members?: string[]
   unitPrice?: string
@@ -31,6 +31,12 @@ export const WhitelistDetails = ({ onChange }: WhitelistDetailsProps) => {
   const [startDate, setStartDate] = useState<Date | undefined>(undefined)
   const [endDate, setEndDate] = useState<Date | undefined>(undefined)
   const [whitelistArray, setWhitelistArray] = useState<string[]>([])
+
+  const whitelistAddressState = useInputState({
+    id: 'whitelist-address',
+    name: 'whitelistAddress',
+    title: 'Whitelist Address',
+  })
 
   const uniPriceState = useNumberInputState({
     id: 'unit-price',
@@ -62,8 +68,8 @@ export const WhitelistDetails = ({ onChange }: WhitelistDetailsProps) => {
 
   useEffect(() => {
     const data: WhitelistDetailsDataProps = {
-      isContractAddress: false,
-      contractAddress: '',
+      whitelistType: whitelistState,
+      contractAddress: whitelistAddressState.value,
       members: whitelistArray,
       unitPrice: uniPriceState.value ? (Number(uniPriceState.value) * 1_000_000).toString() : '',
       startTime: startDate ? (startDate.getTime() * 1_000_000).toString() : '',
@@ -76,7 +82,7 @@ export const WhitelistDetails = ({ onChange }: WhitelistDetailsProps) => {
   }, [uniPriceState.value, memberLimitState.value, perAddressLimitState.value, startDate, endDate, whitelistArray])
 
   return (
-    <div className="py-3 px-8 rounded border border-2 border-white/20">
+    <div className="py-3 px-8 rounded border-2 border-white/20">
       <div className="flex justify-center">
         <div className="ml-4 font-bold form-check form-check-inline">
           <input
@@ -127,6 +133,10 @@ export const WhitelistDetails = ({ onChange }: WhitelistDetailsProps) => {
           </label>
         </div>
       </div>
+
+      <Conditional test={whitelistState === 'existing'}>
+        <AddressInput {...whitelistAddressState} className="pb-5" />
+      </Conditional>
 
       <Conditional test={whitelistState === 'new'}>
         <div className="grid grid-cols-2">

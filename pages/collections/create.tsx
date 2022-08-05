@@ -65,9 +65,9 @@ const CollectionCreationPage: NextPage = () => {
         uploadDetails?.pinataSecretKey as string,
       )
 
-      const whitelist = whitelistDetails?.isContractAddress
-        ? whitelistDetails.contractAddress
-        : await instantiateWhitelist()
+      let whitelist: string | undefined
+      if (whitelistDetails?.whitelistType === 'existing') whitelist = whitelistDetails.contractAddress
+      else if (whitelistDetails?.whitelistType === 'new') whitelist = await instantiateWhitelist()
 
       await instantate(baseUri, coverImageUri, whitelist)
 
