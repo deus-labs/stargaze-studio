@@ -165,6 +165,7 @@ const CollectionCreationPage: NextPage = () => {
                 getAssetType(uploadDetails.assetFiles[i].name) === 'video'
               ) {
                 data.animation_url = `ipfs://${assetUri}/${uploadDetails.assetFiles[i].name}`
+                data.image = `ipfs://${assetUri}/${uploadDetails.assetFiles[i].name}`
               } else {
                 data.image = `ipfs://${assetUri}/${uploadDetails.assetFiles[i].name}`
               }
