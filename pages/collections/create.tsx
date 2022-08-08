@@ -69,7 +69,7 @@ const CollectionCreationPage: NextPage = () => {
       if (whitelistDetails?.whitelistType === 'existing') whitelist = whitelistDetails.contractAddress
       else if (whitelistDetails?.whitelistType === 'new') whitelist = await instantiateWhitelist()
 
-      await instantate(baseUri, coverImageUri, whitelist)
+      await instantiate(baseUri, coverImageUri, whitelist)
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
@@ -100,7 +100,7 @@ const CollectionCreationPage: NextPage = () => {
     return data.contractAddress
   }
 
-  const instantate = async (baseUri: string, coverImageUri: string, whitelist?: string) => {
+  const instantiate = async (baseUri: string, coverImageUri: string, whitelist?: string) => {
     if (!wallet.initialized) throw new Error('Wallet not connected')
     if (!minterContract) throw new Error('Contract not found')
 
@@ -113,7 +113,7 @@ const CollectionCreationPage: NextPage = () => {
     }
 
     const msg = {
-      base_token_uri: baseUri,
+      base_token_uri: `ipfs://${baseUri}/`,
       num_tokens: mintingDetails?.numTokens,
       sg721_code_id: SG721_CODE_ID,
       sg721_instantiate_msg: {
