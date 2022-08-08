@@ -231,6 +231,8 @@ const CollectionCreationPage: NextPage = () => {
     } else if (whitelistDetails.whitelistType === 'new') {
       if (whitelistDetails.members?.length === 0) throw new Error('Whitelist member list cannot be empty')
       if (whitelistDetails.unitPrice === '') throw new Error('Whitelist unit price is required')
+      if (Number(whitelistDetails.unitPrice) <= 25)
+        throw new Error('Invalid unit price: The minimum unit price for whitelisted addresses is 25 STARS')
       if (whitelistDetails.startTime === '') throw new Error('Start time is required')
       if (whitelistDetails.endTime === '') throw new Error('End time is required')
       if (whitelistDetails.perAddressLimit === 0) throw new Error('Per address limit is required')
