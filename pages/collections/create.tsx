@@ -26,6 +26,7 @@ import useCollapse from 'react-collapsed'
 import { toast } from 'react-hot-toast'
 import type { UploadServiceType } from 'services/upload'
 import { upload } from 'services/upload'
+import { compareFileArrays } from 'utils/compareFileArrays'
 import { MINTER_CODE_ID, SG721_CODE_ID, WHITELIST_CODE_ID } from 'utils/constants'
 import { withMetadata } from 'utils/layout'
 import { links } from 'utils/links'
@@ -199,6 +200,7 @@ const CollectionCreationPage: NextPage = () => {
     if (uploadDetails.metadataFiles.length === 0) {
       throw new Error('Please upload metadatas')
     }
+    compareFileArrays(uploadDetails.assetFiles, uploadDetails.metadataFiles)
     if (uploadDetails.uploadService === 'nft-storage') {
       if (uploadDetails.nftStorageApiKey === '') {
         throw new Error('Please enter NFT Storage api key')
