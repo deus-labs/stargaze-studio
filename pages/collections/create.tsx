@@ -109,8 +109,8 @@ const CollectionCreationPage: NextPage = () => {
     let royaltyInfo = null
     if (royaltyDetails?.royaltyType === 'new') {
       royaltyInfo = {
-        paymentAddress: royaltyDetails.paymentAddress,
-        share: royaltyDetails.share,
+        payment_address: royaltyDetails.paymentAddress,
+        share: (Number(royaltyDetails.share) / 100).toString(),
       }
     }
 
@@ -126,16 +126,13 @@ const CollectionCreationPage: NextPage = () => {
           creator: wallet.address,
           description: collectionDetails?.description,
           image: `ipfs://${coverImageUri}/${collectionDetails?.imageFile[0].name as string}`,
-          external_link: collectionDetails?.externalLink,
-          royalty_info: {
-            payment_address: royaltyInfo?.paymentAddress,
-            share: (Number(royaltyInfo?.share) / 100).toString(),
-          },
+          external_link: collectionDetails?.externalLink === '' ? null : collectionDetails?.externalLink,
+          royalty_info: royaltyInfo,
         },
       },
       per_address_limit: mintingDetails?.perAddressLimit,
       unit_price: coin(String(Number(mintingDetails?.unitPrice)), 'ustars'),
-      whitelist_address: whitelist,
+      whitelist,
       start_time: mintingDetails?.startTime,
     }
 
