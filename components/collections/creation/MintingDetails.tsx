@@ -46,7 +46,7 @@ export const MintingDetails = ({ onChange, numberOfTokens }: MintingDetailsProps
   })
 
   useEffect(() => {
-    numberOfTokensState.onChange(numberOfTokens as number)
+    if (numberOfTokens) numberOfTokensState.onChange(numberOfTokens)
     const data: MintingDetailsDataProps = {
       numTokens: numberOfTokensState.value,
       unitPrice: unitPriceState.value ? (Number(unitPriceState.value) * 1_000_000).toString() : '',
