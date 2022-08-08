@@ -88,6 +88,7 @@ export const WhitelistDetails = ({ onChange }: WhitelistDetailsProps) => {
     startDate,
     endDate,
     whitelistArray,
+    whitelistState,
   ])
 
   return (
