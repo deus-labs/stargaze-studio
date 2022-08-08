@@ -217,7 +217,8 @@ const CollectionCreationPage: NextPage = () => {
   const checkMintingDetails = () => {
     if (!mintingDetails) throw new Error('Please fill out the minting details')
     if (mintingDetails.numTokens < 1 || mintingDetails.numTokens > 10000) throw new Error('Invalid number of tokens')
-    if (Number(mintingDetails.unitPrice) < 500) throw new Error('Invalid unit price')
+    if (Number(mintingDetails.unitPrice) <= 50)
+      throw new Error('Invalid unit price: The minimum unit price is 50 STARS')
     if (mintingDetails.perAddressLimit < 1 || mintingDetails.perAddressLimit > 50)
       throw new Error('Invalid limit for tokens per address')
     if (mintingDetails.startTime === '') throw new Error('Start time is required')
