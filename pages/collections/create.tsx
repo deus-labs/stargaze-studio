@@ -56,6 +56,7 @@ const CollectionCreationPage: NextPage = () => {
       checkRoyaltyDetails()
 
       const baseUri = await uploadFiles()
+      //upload coverImageUri and append the file name
       const coverImageUri = await upload(
         collectionDetails?.imageFile as File[],
         uploadDetails?.uploadService as UploadServiceType,
@@ -123,7 +124,7 @@ const CollectionCreationPage: NextPage = () => {
         collection_info: {
           creator: wallet.address,
           description: collectionDetails?.description,
-          image: coverImageUri,
+          image: `ipfs://${coverImageUri}/${collectionDetails?.imageFile[0].name as string}`,
           external_link: collectionDetails?.externalLink,
           royalty_info: royaltyInfo,
         },
