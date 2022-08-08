@@ -78,7 +78,7 @@ export const RoyaltyDetails = ({ onChange }: RoyaltyDetailsProps) => {
             value="Existing"
           />
           <label className="inline-block text-white cursor-pointer form-check-label" htmlFor="royaltyRadio2">
-            New royalty
+            Configure royalty details
           </label>
         </div>
       </div>
