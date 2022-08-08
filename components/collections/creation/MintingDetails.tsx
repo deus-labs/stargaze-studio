@@ -58,9 +58,9 @@ export const MintingDetails = ({ onChange }: MintingDetailsProps) => {
   return (
     <div>
       <FormGroup subtitle="Information about your minting settings" title="Minting Details">
-        <NumberInput {...numberOfTokensState} />
-        <NumberInput {...unitPriceState} />
-        <NumberInput {...perAddressLimitState} />
+        <NumberInput {...numberOfTokensState} isRequired />
+        <NumberInput {...unitPriceState} isRequired />
+        <NumberInput {...perAddressLimitState} isRequired />
         <FormControl htmlId="timestamp" isRequired subtitle="Start time for the minting" title="Start Time">
           <InputDateTime minDate={new Date()} onChange={(date) => setTimestamp(date)} value={timestamp} />
         </FormControl>
