@@ -85,7 +85,7 @@ const CollectionCreationPage: NextPage = () => {
       members: whitelistDetails?.members,
       start_time: whitelistDetails?.startTime,
       end_time: whitelistDetails?.endTime,
-      unit_price: coin(String(Number(whitelistDetails?.unitPrice) * 1000000), 'ustars'),
+      unit_price: coin(String(Number(whitelistDetails?.unitPrice)), 'ustars'),
       per_address_limit: whitelistDetails?.perAddressLimit,
       member_limit: whitelistDetails?.memberLimit,
     }
@@ -129,7 +129,7 @@ const CollectionCreationPage: NextPage = () => {
         },
       },
       per_address_limit: mintingDetails?.perAddressLimit,
-      unit_price: coin(String(Number(mintingDetails?.unitPrice) * 1000000), 'ustars'),
+      unit_price: coin(String(Number(mintingDetails?.unitPrice)), 'ustars'),
       whitelist_address: whitelist,
       start_time: mintingDetails?.startTime,
     }
