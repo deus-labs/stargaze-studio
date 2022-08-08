@@ -218,7 +218,7 @@ const CollectionCreationPage: NextPage = () => {
   const checkMintingDetails = () => {
     if (!mintingDetails) throw new Error('Please fill out the minting details')
     if (mintingDetails.numTokens < 1 || mintingDetails.numTokens > 10000) throw new Error('Invalid number of tokens')
-    if (Number(mintingDetails.unitPrice) <= 50000000)
+    if (Number(mintingDetails.unitPrice) < 50000000)
       throw new Error('Invalid unit price: The minimum unit price is 50 STARS')
     if (mintingDetails.perAddressLimit < 1 || mintingDetails.perAddressLimit > 50)
       throw new Error('Invalid limit for tokens per address')
@@ -232,7 +232,7 @@ const CollectionCreationPage: NextPage = () => {
     } else if (whitelistDetails.whitelistType === 'new') {
       if (whitelistDetails.members?.length === 0) throw new Error('Whitelist member list cannot be empty')
       if (whitelistDetails.unitPrice === '') throw new Error('Whitelist unit price is required')
-      if (Number(whitelistDetails.unitPrice) <= 25000000)
+      if (Number(whitelistDetails.unitPrice) < 25000000)
         throw new Error('Invalid unit price: The minimum unit price for whitelisted addresses is 25 STARS')
       if (whitelistDetails.startTime === '') throw new Error('Start time is required')
       if (whitelistDetails.endTime === '') throw new Error('End time is required')
