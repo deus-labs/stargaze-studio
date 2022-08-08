@@ -221,7 +221,11 @@ const CollectionCreationPage: NextPage = () => {
     if (mintingDetails.numTokens < 1 || mintingDetails.numTokens > 10000) throw new Error('Invalid number of tokens')
     if (Number(mintingDetails.unitPrice) < 50000000)
       throw new Error('Invalid unit price: The minimum unit price is 50 STARS')
-    if (mintingDetails.perAddressLimit < 1 || mintingDetails.perAddressLimit > 50)
+    if (
+      mintingDetails.perAddressLimit < 1 ||
+      mintingDetails.perAddressLimit > 50 ||
+      mintingDetails.perAddressLimit > mintingDetails.numTokens
+    )
       throw new Error('Invalid limit for tokens per address')
     if (mintingDetails.startTime === '') throw new Error('Start time is required')
   }
@@ -271,7 +275,7 @@ const CollectionCreationPage: NextPage = () => {
 
         <div className="flex justify-between py-3 px-8 rounded border-2 border-white/20 grid-col-2">
           <CollectionDetails onChange={setCollectionDetails} />
-          <MintingDetails onChange={setMintingDetails} />
+          <MintingDetails numberOfTokens={uploadDetails?.assetFiles.length} onChange={setMintingDetails} />
         </div>
 
         <div className="flex justify-between my-6">
