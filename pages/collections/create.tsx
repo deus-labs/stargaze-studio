@@ -127,7 +127,10 @@ const CollectionCreationPage: NextPage = () => {
           description: collectionDetails?.description,
           image: `ipfs://${coverImageUri}/${collectionDetails?.imageFile[0].name as string}`,
           external_link: collectionDetails?.externalLink,
-          royalty_info: royaltyInfo,
+          royalty_info: {
+            payment_address: royaltyInfo?.paymentAddress,
+            share: (Number(royaltyInfo?.share) / 100).toString(),
+          },
         },
       },
       per_address_limit: mintingDetails?.perAddressLimit,
@@ -137,7 +140,6 @@ const CollectionCreationPage: NextPage = () => {
     }
 
     const data = await minterContract.instantiate(MINTER_CODE_ID, msg, 'Stargaze Minter Contract', wallet.address)
-
     setTransactionHash(data.transactionHash)
     setContractAddress(data.contractAddress)
   }
