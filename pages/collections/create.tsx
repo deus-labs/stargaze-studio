@@ -209,9 +209,9 @@ const CollectionCreationPage: NextPage = () => {
 
   const checkCollectionDetails = () => {
     if (!collectionDetails) throw new Error('Please fill out the collection details')
-    if (collectionDetails.name === '') throw new Error('Name is required')
-    if (collectionDetails.description === '') throw new Error('Description is required')
-    if (collectionDetails.imageFile.length === 0) throw new Error('Cover image is required')
+    if (collectionDetails.name === '') throw new Error('Collection name is required')
+    if (collectionDetails.description === '') throw new Error('Collection description is required')
+    if (collectionDetails.imageFile.length === 0) throw new Error('Collection cover image is required')
   }
 
   const checkMintingDetails = () => {
@@ -219,7 +219,7 @@ const CollectionCreationPage: NextPage = () => {
     if (mintingDetails.numTokens < 1 || mintingDetails.numTokens > 10000) throw new Error('Invalid number of tokens')
     if (Number(mintingDetails.unitPrice) < 500) throw new Error('Invalid unit price')
     if (mintingDetails.perAddressLimit < 1 || mintingDetails.perAddressLimit > 50)
-      throw new Error('Per address limit is required')
+      throw new Error('Invalid limit for tokens per address')
     if (mintingDetails.startTime === '') throw new Error('Start time is required')
   }
 
@@ -227,7 +227,7 @@ const CollectionCreationPage: NextPage = () => {
     if (!whitelistDetails) throw new Error('Please fill out the whitelist details')
     if (whitelistDetails.whitelistType === 'existing') {
       if (whitelistDetails.contractAddress === '') throw new Error('Whitelist contract address is required')
-    } else {
+    } else if (whitelistDetails.whitelistType === 'new') {
       if (whitelistDetails.members?.length === 0) throw new Error('Whitelist member list cannot be empty')
       if (whitelistDetails.unitPrice === '') throw new Error('Whitelist unit price is required')
       if (whitelistDetails.startTime === '') throw new Error('Start time is required')
