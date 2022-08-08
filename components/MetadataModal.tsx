@@ -108,10 +108,14 @@ export const MetadataModal = (props: MetadataModalProps) => {
     metadata.attributes = Object.values(attributesState)[1]
     metadata.attributes = metadata.attributes.filter((attribute: { trait_type: string }) => attribute.trait_type !== '')
 
-    metadata.name = nameState.value
-    metadata.description = descriptionState.value
-    metadata.external_url = externalUrlState.value
-    metadata.youtube_url = youtubeUrlState.value
+    if (nameState.value === '') delete metadata.name
+    else metadata.name = nameState.value
+    if (descriptionState.value === '') delete metadata.description
+    else metadata.description = descriptionState.value
+    if (externalUrlState.value === '') delete metadata.external_url
+    else metadata.externalUrl = externalUrlState.value
+    if (youtubeUrlState.value === '') delete metadata.youtube_url
+    else metadata.youtube_url = youtubeUrlState.value
 
     const metadataFileBlob = new Blob([JSON.stringify(metadata)], {
       type: 'application/json',
@@ -119,6 +123,7 @@ export const MetadataModal = (props: MetadataModalProps) => {
 
     const editedMetadataFile = new File([metadataFileBlob], metadataFile.name, { type: 'application/json' })
     props.updateMetadata(editedMetadataFile)
+    console.log(editedMetadataFile)
   }
 
   useEffect(() => {
