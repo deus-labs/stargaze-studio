@@ -117,12 +117,7 @@ export interface MintForMessage {
 export interface BatchMintMessage {
   sender: string
   contract: string
-  msg: {
-    batch_mint: {
-      recipient: string
-      number_of_tokens: number
-    }
-  }
+  msg: Record<string, unknown>[]
   funds: Coin[]
 }
 
@@ -160,7 +155,6 @@ export interface MinterContract {
 }
 
 export const minter = (client: SigningCosmWasmClient, txSigner: string): MinterContract => {
-  const executeContractMsgs: MsgExecuteContractEncodeObject[] = []
   const use = (contractAddress: string): MinterInstance => {
     //Query
     const getConfig = async (): Promise<any> => {
@@ -285,6 +279,7 @@ export const minter = (client: SigningCosmWasmClient, txSigner: string): MinterC
     }
 
     const batchMint = async (senderAddress: string, recipient: string, batchNumber: number): Promise<string> => {
+      const executeContractMsgs: MsgExecuteContractEncodeObject[] = []
       for (let i = 0; i < batchNumber; i++) {
         const msg = {
           mint_to: { recipient },
@@ -447,15 +442,14 @@ export const minter = (client: SigningCosmWasmClient, txSigner: string): MinterC
     }
 
     const batchMint = (contractAddress: string, recipient: string, batchNumber: number): BatchMintMessage => {
+      const msg: Record<string, unknown>[] = []
+      for (let i = 0; i < batchNumber; i++) {
+        msg.push({ mint_to: { recipient } })
+      }
       return {
         sender: txSigner,
         contract: contractAddress,
-        msg: {
-          batch_mint: {
-            recipient,
-            number_of_tokens: batchNumber,
-          },
-        },
+        msg,
         funds: [],
       }
     }
