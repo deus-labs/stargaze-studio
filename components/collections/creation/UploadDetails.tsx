@@ -166,7 +166,14 @@ export const UploadDetails = ({ onChange }: UploadDetailsProps) => {
     } catch (error: any) {
       toast.error(error.message)
     }
-  }, [assetFilesArray, metadataFilesArray])
+  }, [
+    assetFilesArray,
+    metadataFilesArray,
+    uploadService,
+    nftStorageApiKeyState.value,
+    pinataApiKeyState.value,
+    pinataSecretKeyState.value,
+  ])
 
   useEffect(() => {
     setAssetFilesArray([])
