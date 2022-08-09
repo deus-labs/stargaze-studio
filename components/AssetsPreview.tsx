@@ -106,7 +106,7 @@ export const AssetsPreview = ({ assetFilesArray, updateMetadataFileIndex }: Asse
           Page{' '}
           <NumberInput
             {...pageState}
-            className="mr-1 mb-2 ml-2 w-12"
+            className={`mr-1 mb-2 ml-2 ${totalPages > 99 ? 'w-14' : 'w-12'}`}
             onChange={(e) => {
               if (Number(e.target.value) > totalPages) {
                 pageState.onChange(totalPages)
