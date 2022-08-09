@@ -287,9 +287,9 @@ export const minter = (client: SigningCosmWasmClient, txSigner: string): MinterC
     }
 
     const batchMint = async (senderAddress: string, recipient: string, tokenIdList: number[]): Promise<string> => {
-      tokenIdList.forEach(() => {
+      tokenIdList.forEach((tokenId) => {
         const msg = {
-          mint_to: { recipient },
+          mint_for: { token_id: tokenId, recipient },
         }
         const executeContractMsg: MsgExecuteContractEncodeObject = {
           typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
