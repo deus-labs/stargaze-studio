@@ -6,7 +6,7 @@ import { useActionsComboboxState } from 'components/collections/actions/Combobox
 import { Conditional } from 'components/Conditional'
 import { ContractPageHeader } from 'components/ContractPageHeader'
 import { FormControl } from 'components/FormControl'
-import { AddressInput, NumberInput, TextInput } from 'components/forms/FormInput'
+import { AddressInput, NumberInput } from 'components/forms/FormInput'
 import { useInputState, useNumberInputState } from 'components/forms/FormInput.hooks'
 import { InputDateTime } from 'components/InputDateTime'
 import { JsonPreview } from 'components/JsonPreview'
@@ -61,11 +61,11 @@ const CollectionActionsPage: NextPage = () => {
     subtitle: 'Enter the token ID',
   })
 
-  const tokenIdListState = useInputState({
-    id: 'token-id-list',
-    name: 'tokenIds',
-    title: 'Token IDs',
-    subtitle: 'Enter the token IDs',
+  const batchNumberState = useNumberInputState({
+    id: 'batch-number',
+    name: 'batchNumber',
+    title: 'Number of Tokens',
+    subtitle: 'Enter the number of tokens to mint',
   })
 
   const recipientState = useInputState({
@@ -104,7 +104,7 @@ const CollectionActionsPage: NextPage = () => {
     minterContract: minterContractState.value,
     sg721Contract: sg721ContractState.value,
     tokenId: tokenIdState.value,
-    tokenIdList: tokenIdListState.value.split(',').map(Number),
+    batchNumber: batchNumberState.value,
     minterMessages,
     sg721Messages,
     recipient: recipientState.value,
@@ -154,7 +154,7 @@ const CollectionActionsPage: NextPage = () => {
           {showWhitelistField && <AddressInput {...whitelistState} />}
           {showLimitField && <NumberInput {...limitState} />}
           {showTokenIdField && <NumberInput {...tokenIdState} />}
-          {showTokenIdListField && <TextInput {...tokenIdListState} />}
+          {showTokenIdListField && <NumberInput {...batchNumberState} />}
           <Conditional test={showDateField}>
             <FormControl htmlId="start-date" subtitle="Start time for the minting" title="Start Time">
               <InputDateTime minDate={new Date()} onChange={(date) => setTimestamp(date)} value={timestamp} />
