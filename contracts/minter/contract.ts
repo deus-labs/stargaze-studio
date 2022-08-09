@@ -1,8 +1,10 @@
-import type { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
+import type { MsgExecuteContractEncodeObject, SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
+import { toUtf8 } from '@cosmjs/encoding'
 import type { Coin } from '@cosmjs/proto-signing'
 import { coin } from '@cosmjs/proto-signing'
 import type { logs } from '@cosmjs/stargate'
 import type { Timestamp } from '@stargazezone/types/contracts/minter/shared-types'
+import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx'
 
 export interface InstantiateResponse {
   readonly contractAddress: string
@@ -32,6 +34,7 @@ export interface MinterInstance {
   updatePerAddressLimit: (senderAddress: string, perAddressLimit: number) => Promise<string>
   mintTo: (senderAddress: string, recipient: string) => Promise<string>
   mintFor: (senderAddress: string, recipient: string, tokenId: number) => Promise<string>
+  batchMint: (senderAddress: string, recipient: string, tokenId: number[]) => Promise<string>
   shuffle: (senderAddress: string) => Promise<string>
   withdraw: (senderAddress: string) => Promise<string>
 }
@@ -43,6 +46,7 @@ export interface MinterMessages {
   updatePerAddressLimit: (contractAddress: string, perAddressLimit: number) => UpdatePerAddressLimitMessage
   mintTo: (contractAddress: string, recipient: string) => MintToMessage
   mintFor: (contractAddress: string, recipient: string, tokenId: number) => MintForMessage
+  batchMint: (contractAddress: string, recipient: string, tokenIdList: number[]) => BatchMintMessage
   shuffle: (contractAddress: string) => ShuffleMessage
   withdraw: (contractAddress: string) => WithdrawMessage
 }
@@ -110,6 +114,18 @@ export interface MintForMessage {
   funds: Coin[]
 }
 
+export interface BatchMintMessage {
+  sender: string
+  contract: string
+  msg: {
+    batch_mint: {
+      recipient: string
+      token_id: number[]
+    }
+  }
+  funds: Coin[]
+}
+
 export interface ShuffleMessage {
   sender: string
   contract: string
@@ -144,6 +160,9 @@ export interface MinterContract {
 }
 
 export const minter = (client: SigningCosmWasmClient, txSigner: string): MinterContract => {
+  const executeContractMsgs: MsgExecuteContractEncodeObject[] = []
+  const funds: never[] = []
+
   const use = (contractAddress: string): MinterInstance => {
     //Query
     const getConfig = async (): Promise<any> => {
@@ -267,6 +286,29 @@ export const minter = (client: SigningCosmWasmClient, txSigner: string): MinterC
       return res.transactionHash
     }
 
+    const batchMint = async (senderAddress: string, recipient: string, tokenIdList: number[]): Promise<string> => {
+      tokenIdList.forEach(() => {
+        const msg = {
+          mint_to: { recipient },
+        }
+        const executeContractMsg: MsgExecuteContractEncodeObject = {
+          typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
+          value: MsgExecuteContract.fromPartial({
+            sender: senderAddress,
+            contract: contractAddress,
+            msg: toUtf8(JSON.stringify(msg)),
+            //funds,
+          }),
+        }
+
+        executeContractMsgs.push(executeContractMsg)
+      })
+
+      const res = await client.signAndBroadcast(senderAddress, executeContractMsgs, 'auto', 'batch mint')
+
+      return res.transactionHash
+    }
+
     const shuffle = async (senderAddress: string): Promise<string> => {
       const res = await client.execute(
         senderAddress,
@@ -308,6 +350,7 @@ export const minter = (client: SigningCosmWasmClient, txSigner: string): MinterC
       updatePerAddressLimit,
       mintTo,
       mintFor,
+      batchMint,
       shuffle,
       withdraw,
     }
@@ -406,6 +449,20 @@ export const minter = (client: SigningCosmWasmClient, txSigner: string): MinterC
       }
     }
 
+    const batchMint = (contractAddress: string, recipient: string, tokenId: number[]): BatchMintMessage => {
+      return {
+        sender: txSigner,
+        contract: contractAddress,
+        msg: {
+          batch_mint: {
+            recipient,
+            token_id: tokenId,
+          },
+        },
+        funds: [],
+      }
+    }
+
     const shuffle = (contractAddress: string): ShuffleMessage => {
       return {
         sender: txSigner,
@@ -435,6 +492,7 @@ export const minter = (client: SigningCosmWasmClient, txSigner: string): MinterC
       updatePerAddressLimit,
       mintTo,
       mintFor,
+      batchMint,
       shuffle,
       withdraw,
     }

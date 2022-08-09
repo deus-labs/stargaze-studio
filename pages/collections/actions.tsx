@@ -6,7 +6,7 @@ import { useActionsComboboxState } from 'components/collections/actions/Combobox
 import { Conditional } from 'components/Conditional'
 import { ContractPageHeader } from 'components/ContractPageHeader'
 import { FormControl } from 'components/FormControl'
-import { AddressInput, NumberInput } from 'components/forms/FormInput'
+import { AddressInput, NumberInput, TextInput } from 'components/forms/FormInput'
 import { useInputState, useNumberInputState } from 'components/forms/FormInput.hooks'
 import { InputDateTime } from 'components/InputDateTime'
 import { JsonPreview } from 'components/JsonPreview'
@@ -61,6 +61,13 @@ const CollectionActionsPage: NextPage = () => {
     subtitle: 'Enter the token ID',
   })
 
+  const tokenIdListState = useInputState({
+    id: 'token-id-list',
+    name: 'tokenIds',
+    title: 'Token IDs',
+    subtitle: 'Enter the token IDs',
+  })
+
   const recipientState = useInputState({
     id: 'recipient-address',
     name: 'recipient',
@@ -79,7 +86,8 @@ const CollectionActionsPage: NextPage = () => {
   const showDateField = type === 'update_start_time'
   const showLimitField = type === 'update_per_address_limit'
   const showTokenIdField = isEitherType(type, ['transfer', 'mint_for'])
-  const showRecipientField = isEitherType(type, ['transfer', 'mint_to', 'mint_for'])
+  const showTokenIdListField = type === 'batch_mint'
+  const showRecipientField = isEitherType(type, ['transfer', 'mint_to', 'mint_for', 'batch_mint'])
 
   const minterMessages = useMemo(
     () => minterContract?.use(minterContractState.value),
@@ -96,6 +104,7 @@ const CollectionActionsPage: NextPage = () => {
     minterContract: minterContractState.value,
     sg721Contract: sg721ContractState.value,
     tokenId: tokenIdState.value,
+    tokenIdList: tokenIdListState.value.split(',').map(Number),
     minterMessages,
     sg721Messages,
     recipient: recipientState.value,
@@ -145,6 +154,7 @@ const CollectionActionsPage: NextPage = () => {
           {showWhitelistField && <AddressInput {...whitelistState} />}
           {showLimitField && <NumberInput {...limitState} />}
           {showTokenIdField && <NumberInput {...tokenIdState} />}
+          {showTokenIdListField && <TextInput {...tokenIdListState} />}
           <Conditional test={showDateField}>
             <FormControl htmlId="start-date" subtitle="Start time for the minting" title="Start Time">
               <InputDateTime minDate={new Date()} onChange={(date) => setTimestamp(date)} value={timestamp} />
