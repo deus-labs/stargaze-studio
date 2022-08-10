@@ -1,4 +1,5 @@
 /* eslint-disable eslint-comments/disable-enable-pair */
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 
@@ -107,7 +108,7 @@ export const CollectionDetails = ({ onChange, uploadMethod, coverImageUrl }: Col
               <img alt="no-preview-available" src={URL.createObjectURL(coverImage)} />
             </div>
           )}
-          {uploadMethod === 'existing' && coverImageUrl.includes('ipfs://') && (
+          {uploadMethod === 'existing' && coverImageUrl?.includes('ipfs://') && (
             <div className="max-w-[200px] max-h-[200px] rounded border-2">
               <img
                 alt="no-preview-available"
@@ -115,7 +116,7 @@ export const CollectionDetails = ({ onChange, uploadMethod, coverImageUrl }: Col
               />
             </div>
           )}
-          {uploadMethod === 'existing' && !coverImageUrl.includes('ipfs://') && (
+          {uploadMethod === 'existing' && !coverImageUrl?.includes('ipfs://') && (
             <div className="max-w-[200px] max-h-[200px] rounded border-2">
               <img alt="no-preview-available" src={coverImageUrl} />
             </div>

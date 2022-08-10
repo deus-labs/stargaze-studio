@@ -254,6 +254,16 @@ const CollectionCreationPage: NextPage = () => {
     if (uploadDetails.uploadMethod === 'existing' && uploadDetails.imageUrl === '') {
       throw new Error('Please specify a cover image URL')
     }
+    if (
+      uploadDetails.uploadMethod === 'existing' &&
+      uploadDetails.imageUrl?.substring(uploadDetails.imageUrl.lastIndexOf('.') + 1) !==
+        ('jpg' || 'png' || 'jpeg' || 'gif' || 'svg')
+    ) {
+      throw new Error('Please specify a valid cover image URL')
+    }
+    if (uploadDetails.uploadMethod === 'existing' && !uploadDetails.baseTokenURI?.includes('ipfs://')) {
+      throw new Error('Please specify a valid cover image URL')
+    }
   }
 
   const checkCollectionDetails = () => {
