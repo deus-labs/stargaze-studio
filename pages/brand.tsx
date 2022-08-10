@@ -7,19 +7,19 @@ import { withMetadata } from 'utils/layout'
 
 const ASSETS: BrandPreviewProps[] = [
   {
-    name: 'StargazeTools',
+    name: 'StargazeStudio',
     id: 'brand',
     url: 'brand/brand.svg',
     Asset: dynamic(() => import('public/brand/brand.svg')),
   },
   {
-    name: 'StargazeTools Bust',
+    name: 'StargazeStudio Bust',
     id: 'brand-bust',
     url: 'brand/brand-bust.svg',
     Asset: dynamic(() => import('public/brand/brand-bust.svg')),
   },
   {
-    name: 'StargazeTools Text',
+    name: 'StargazeStudio Text',
     id: 'brand-text',
     url: 'brand/brand-text.svg',
     Asset: dynamic(() => import('public/brand/brand-text.svg')),
@@ -33,7 +33,7 @@ const BrandPage: NextPage = () => {
 
       <div className="space-y-2">
         <h1 className="text-4xl font-bold">Brand Assets</h1>
-        <p>View and download StargazeTools brand assets</p>
+        <p>View and download StargazeStudio brand assets</p>
       </div>
 
       <hr className="border-white/20" />
