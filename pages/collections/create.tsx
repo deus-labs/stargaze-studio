@@ -313,7 +313,7 @@ const CollectionCreationPage: NextPage = () => {
             <div>
               Base Token URI:{' '}
               <Anchor
-                className="font-bold text-plumbus hover:underline"
+                className="text-stargaze hover:underline"
                 external
                 href={`https://ipfs.stargaze.zone/ipfs/${baseTokenUri as string}/`}
               >
@@ -322,7 +322,7 @@ const CollectionCreationPage: NextPage = () => {
               <br />
               Minter Contract Address:{'  '}
               <Anchor
-                className="font-bold text-plumbus hover:underline"
+                className="text-stargaze hover:underline"
                 external
                 href={`/contracts/minter/query/?contractAddress=${minterContractAddress as string}`}
               >
@@ -331,7 +331,7 @@ const CollectionCreationPage: NextPage = () => {
               <br />
               SG721 Contract Address:{'  '}
               <Anchor
-                className="font-bold text-plumbus hover:underline"
+                className="text-stargaze hover:underline"
                 external
                 href={`/contracts/sg721/query/?contractAddress=${sg721ContractAddress as string}`}
               >
@@ -340,7 +340,7 @@ const CollectionCreationPage: NextPage = () => {
               <br />
               Transaction Hash: {'  '}
               <Anchor
-                className="font-bold text-plumbus hover:underline"
+                className="text-stargaze hover:underline"
                 external
                 href={`https://testnet-explorer.publicawesome.dev/stargaze/tx/${transactionHash as string}`}
               >
