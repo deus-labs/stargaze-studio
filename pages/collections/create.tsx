@@ -1,4 +1,5 @@
 /* eslint-disable eslint-comments/disable-enable-pair */
+
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 
@@ -256,8 +257,11 @@ const CollectionCreationPage: NextPage = () => {
     }
     if (
       uploadDetails.uploadMethod === 'existing' &&
-      uploadDetails.imageUrl?.substring(uploadDetails.imageUrl.lastIndexOf('.') + 1) !==
-        ('jpg' || 'png' || 'jpeg' || 'gif' || 'svg')
+      uploadDetails.imageUrl?.substring(uploadDetails.imageUrl.lastIndexOf('.') + 1) !== 'jpg' &&
+      uploadDetails.imageUrl?.substring(uploadDetails.imageUrl.lastIndexOf('.') + 1) !== 'png' &&
+      uploadDetails.imageUrl?.substring(uploadDetails.imageUrl.lastIndexOf('.') + 1) !== 'jpeg' &&
+      uploadDetails.imageUrl?.substring(uploadDetails.imageUrl.lastIndexOf('.') + 1) !== 'gif' &&
+      uploadDetails.imageUrl?.substring(uploadDetails.imageUrl.lastIndexOf('.') + 1) !== 'svg'
     ) {
       throw new Error('Please specify a valid cover image URL')
     }
