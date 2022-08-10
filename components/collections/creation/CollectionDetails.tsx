@@ -11,9 +11,11 @@ import { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 
 import { TextInput } from '../../forms/FormInput'
+import type { UploadMethod } from './UploadDetails'
 
 interface CollectionDetailsProps {
   onChange: (data: CollectionDetailsDataProps) => void
+  uploadMethod: UploadMethod
 }
 
 export interface CollectionDetailsDataProps {
@@ -23,7 +25,7 @@ export interface CollectionDetailsDataProps {
   externalLink?: string
 }
 
-export const CollectionDetails = ({ onChange }: CollectionDetailsProps) => {
+export const CollectionDetails = ({ onChange, uploadMethod }: CollectionDetailsProps) => {
   const [coverImage, setCoverImage] = useState<File | null>(null)
 
   const nameState = useInputState({
@@ -84,13 +86,14 @@ export const CollectionDetails = ({ onChange }: CollectionDetailsProps) => {
       <FormGroup subtitle="Information about your collection" title="Collection Details">
         <TextInput {...nameState} isRequired />
         <TextInput {...descriptionState} isRequired />
-        <FormControl isRequired title="Cover Image">
+        <FormControl isRequired={uploadMethod === 'new'} title="Cover Image">
           <input
             accept="image/*"
             className={clsx(
               'file:py-2 file:px-4 file:mr-4 file:bg-plumbus-light file:rounded file:border-0 cursor-pointer',
               'before:hover:bg-white/5 before:transition',
             )}
+            disabled={uploadMethod === 'existing'}
             id="cover-image"
             onChange={selectCoverImage}
             type="file"

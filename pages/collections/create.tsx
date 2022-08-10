@@ -27,13 +27,13 @@ import { NextSeo } from 'next-seo'
 import { useEffect, useRef, useState } from 'react'
 import useCollapse from 'react-collapsed'
 import { toast } from 'react-hot-toast'
-import type { UploadServiceType } from 'services/upload'
 import { upload } from 'services/upload'
 import { compareFileArrays } from 'utils/compareFileArrays'
 import { MINTER_CODE_ID, SG721_CODE_ID, WHITELIST_CODE_ID } from 'utils/constants'
 import { withMetadata } from 'utils/layout'
 import { links } from 'utils/links'
 
+import type { UploadMethod } from '../../components/collections/creation/UploadDetails'
 import { getAssetType } from '../../utils/getAssetType'
 
 const CollectionCreationPage: NextPage = () => {
@@ -55,11 +55,11 @@ const CollectionCreationPage: NextPage = () => {
   const [minterContractAddress, setMinterContractAddress] = useState<string | null>(null)
   const [sg721ContractAddress, setSg721ContractAddress] = useState<string | null>(null)
   const [baseTokenUri, setBaseTokenUri] = useState<string | null>(null)
+  const [coverImageUrl, setCoverImageUrl] = useState<string | null>(null)
   const [transactionHash, setTransactionHash] = useState<string | null>(null)
 
   const createCollection = async () => {
     try {
-      setBaseTokenUri(null)
       setMinterContractAddress(null)
       setSg721ContractAddress(null)
       setTransactionHash(null)
@@ -68,28 +68,31 @@ const CollectionCreationPage: NextPage = () => {
       checkMintingDetails()
       checkWhitelistDetails()
       checkRoyaltyDetails()
+      if (uploadDetails?.uploadMethod === 'new') {
+        setUploading(true)
 
-      setUploading(true)
-
-      const baseUri = await uploadFiles()
-      setBaseTokenUri(baseUri)
-      //upload coverImageUri and append the file name
-      const coverImageUri = await upload(
-        collectionDetails?.imageFile as File[],
-        uploadDetails?.uploadService as UploadServiceType,
-        'cover',
-        uploadDetails?.nftStorageApiKey as string,
-        uploadDetails?.pinataApiKey as string,
-        uploadDetails?.pinataSecretKey as string,
-      )
-
-      setUploading(false)
+        const baseUri = await uploadFiles()
+        setBaseTokenUri(baseUri)
+        //upload coverImageUri and append the file name
+        const coverImageUri = await upload(
+          collectionDetails?.imageFile as File[],
+          uploadDetails.uploadService,
+          'cover',
+          uploadDetails.nftStorageApiKey as string,
+          uploadDetails.pinataApiKey as string,
+          uploadDetails.pinataSecretKey as string,
+        )
+        setCoverImageUrl(coverImageUri)
+        setUploading(false)
+      } else {
+        setBaseTokenUri(uploadDetails?.baseTokenURI as string)
+        setCoverImageUrl(uploadDetails?.imageUrl as string)
+      }
 
       let whitelist: string | undefined
       if (whitelistDetails?.whitelistType === 'existing') whitelist = whitelistDetails.contractAddress
       else if (whitelistDetails?.whitelistType === 'new') whitelist = await instantiateWhitelist()
-
-      await instantiate(baseUri, coverImageUri, whitelist)
+      await instantiate(baseTokenUri as string, coverImageUrl as string, whitelist)
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
@@ -132,9 +135,8 @@ const CollectionCreationPage: NextPage = () => {
         share: (Number(royaltyDetails.share) / 100).toString(),
       }
     }
-
     const msg = {
-      base_token_uri: `ipfs://${baseUri}/`,
+      base_token_uri: `${uploadDetails?.uploadMethod === 'new' ? `ipfs://${baseUri}/` : `${baseTokenUri as string}`}`,
       num_tokens: mintingDetails?.numTokens,
       sg721_code_id: SG721_CODE_ID,
       sg721_instantiate_msg: {
@@ -144,7 +146,11 @@ const CollectionCreationPage: NextPage = () => {
         collection_info: {
           creator: wallet.address,
           description: collectionDetails?.description,
-          image: `ipfs://${coverImageUri}/${collectionDetails?.imageFile[0].name as string}`,
+          image: `${
+            uploadDetails?.uploadMethod === 'new'
+              ? `ipfs://${coverImageUri}/${collectionDetails?.imageFile[0].name as string}`
+              : `${coverImageUri}`
+          }`,
           external_link: collectionDetails?.externalLink === '' ? null : collectionDetails?.externalLink,
           royalty_info: royaltyInfo,
         },
@@ -223,19 +229,27 @@ const CollectionCreationPage: NextPage = () => {
     if (!uploadDetails) {
       throw new Error('Please select assets and metadata')
     }
-    if (uploadDetails.assetFiles.length === 0) {
+    if (uploadDetails.uploadMethod === 'new' && uploadDetails.assetFiles.length === 0) {
       throw new Error('Please select the assets')
     }
-    if (uploadDetails.metadataFiles.length === 0) {
+    if (uploadDetails.uploadMethod === 'new' && uploadDetails.metadataFiles.length === 0) {
       throw new Error('Please select the metadata files')
     }
-    compareFileArrays(uploadDetails.assetFiles, uploadDetails.metadataFiles)
-    if (uploadDetails.uploadService === 'nft-storage') {
-      if (uploadDetails.nftStorageApiKey === '') {
-        throw new Error('Please enter a valid NFT Storage API key')
+    if (uploadDetails.uploadMethod === 'new') compareFileArrays(uploadDetails.assetFiles, uploadDetails.metadataFiles)
+    if (uploadDetails.uploadMethod === 'new') {
+      if (uploadDetails.uploadService === 'nft-storage') {
+        if (uploadDetails.nftStorageApiKey === '') {
+          throw new Error('Please enter a valid NFT Storage API key')
+        }
+      } else if (uploadDetails.pinataApiKey === '' || uploadDetails.pinataSecretKey === '') {
+        throw new Error('Please enter Pinata API and secret keys')
       }
-    } else if (uploadDetails.pinataApiKey === '' || uploadDetails.pinataSecretKey === '') {
-      throw new Error('Please enter Pinata API and secret keys')
+    }
+    if (uploadDetails.uploadMethod === 'existing' && uploadDetails.baseTokenURI === '') {
+      throw new Error('Please enter the base token URI')
+    }
+    if (uploadDetails.uploadMethod === 'existing' && uploadDetails.imageUrl === '') {
+      throw new Error('Please specify a cover image URL')
     }
   }
 
@@ -243,7 +257,8 @@ const CollectionCreationPage: NextPage = () => {
     if (!collectionDetails) throw new Error('Please fill out the collection details')
     if (collectionDetails.name === '') throw new Error('Collection name is required')
     if (collectionDetails.description === '') throw new Error('Collection description is required')
-    if (collectionDetails.imageFile.length === 0) throw new Error('Collection cover image is required')
+    if (uploadDetails?.uploadMethod === 'new' && collectionDetails.imageFile.length === 0)
+      throw new Error('Collection cover image is required')
   }
 
   const checkMintingDetails = () => {
@@ -354,8 +369,15 @@ const CollectionCreationPage: NextPage = () => {
         <UploadDetails onChange={setUploadDetails} />
 
         <div className="flex justify-between py-3 px-8 rounded border-2 border-white/20 grid-col-2">
-          <CollectionDetails onChange={setCollectionDetails} />
-          <MintingDetails numberOfTokens={uploadDetails?.assetFiles.length} onChange={setMintingDetails} />
+          <CollectionDetails
+            onChange={setCollectionDetails}
+            uploadMethod={uploadDetails?.uploadMethod as UploadMethod}
+          />
+          <MintingDetails
+            numberOfTokens={uploadDetails?.assetFiles.length}
+            onChange={setMintingDetails}
+            uploadMethod={uploadDetails?.uploadMethod as UploadMethod}
+          />
         </div>
 
         <div className="flex justify-between my-6">
