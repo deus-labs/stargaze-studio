@@ -1,5 +1,5 @@
 /* eslint-disable eslint-comments/disable-enable-pair */
-
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 
@@ -343,13 +343,26 @@ const CollectionCreationPage: NextPage = () => {
           <Alert className="mt-5" type="info">
             <div>
               Base Token URI:{' '}
-              <Anchor
-                className="text-stargaze hover:underline"
-                external
-                href={`https://ipfs.stargaze.zone/ipfs/${baseTokenUri as string}/`}
-              >
-                ipfs://{baseTokenUri as string}/
-              </Anchor>
+              {uploadDetails?.uploadMethod === 'new' && (
+                <Anchor
+                  className="text-stargaze hover:underline"
+                  external
+                  href={`https://ipfs.stargaze.zone/ipfs/${baseTokenUri as string}/`}
+                >
+                  ipfs://{baseTokenUri as string}/
+                </Anchor>
+              )}
+              {uploadDetails?.uploadMethod === 'existing' && (
+                <Anchor
+                  className="text-stargaze hover:underline"
+                  external
+                  href={`https://ipfs.stargaze.zone/ipfs/${baseTokenUri?.substring(
+                    baseTokenUri.lastIndexOf('ipfs://') + 7,
+                  )}/`}
+                >
+                  ipfs://{baseTokenUri?.substring(baseTokenUri.lastIndexOf('ipfs://') + 7)}/
+                </Anchor>
+              )}
               <br />
               Minter Contract Address:{'  '}
               <Anchor
