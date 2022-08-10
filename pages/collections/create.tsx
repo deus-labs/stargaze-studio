@@ -301,7 +301,7 @@ const CollectionCreationPage: NextPage = () => {
 
         <p>
           Make sure you check our{' '}
-          <Anchor className="font-bold text-plumbus hover:underline" href={links['Docs']}>
+          <Anchor className="font-bold text-plumbus hover:underline" external href={links['Docs']}>
             documentation
           </Anchor>{' '}
           on how to create your collection
@@ -311,13 +311,41 @@ const CollectionCreationPage: NextPage = () => {
         <Conditional test={minterContractAddress !== null}>
           <Alert className="mt-5" type="info">
             <div>
-              Base Token URI: {baseTokenUri}
+              Base Token URI:{' '}
+              <Anchor
+                className="font-bold text-plumbus hover:underline"
+                external
+                href={`https://ipfs.stargaze.zone/ipfs/${baseTokenUri as string}/`}
+              >
+                ipfs://{baseTokenUri as string}/
+              </Anchor>
               <br />
-              Minter Contract Address: {minterContractAddress}
+              Minter Contract Address:{'  '}
+              <Anchor
+                className="font-bold text-plumbus hover:underline"
+                external
+                href={`/contracts/minter/query/?contractAddress=${minterContractAddress as string}`}
+              >
+                {minterContractAddress}
+              </Anchor>
               <br />
-              SG721 Contract Address: {sg721ContractAddress}
+              SG721 Contract Address:{'  '}
+              <Anchor
+                className="font-bold text-plumbus hover:underline"
+                external
+                href={`/contracts/sg721/query/?contractAddress=${sg721ContractAddress as string}`}
+              >
+                {sg721ContractAddress}
+              </Anchor>
               <br />
-              Transaction Hash: {transactionHash}
+              Transaction Hash: {'  '}
+              <Anchor
+                className="font-bold text-plumbus hover:underline"
+                external
+                href={`https://testnet-explorer.publicawesome.dev/stargaze/tx/${transactionHash as string}`}
+              >
+                {transactionHash}
+              </Anchor>
             </div>
           </Alert>
         </Conditional>
