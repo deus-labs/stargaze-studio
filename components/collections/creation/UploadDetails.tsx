@@ -167,6 +167,8 @@ export const UploadDetails = ({ onChange }: UploadDetailsProps) => {
   useEffect(() => {
     setAssetFilesArray([])
     setMetadataFilesArray([])
+    baseTokenUriState.onChange('')
+    coverImageUrlState.onChange('')
   }, [uploadMethod])
 
   return (

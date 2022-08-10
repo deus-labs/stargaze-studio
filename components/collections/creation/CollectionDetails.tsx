@@ -16,6 +16,7 @@ import type { UploadMethod } from './UploadDetails'
 interface CollectionDetailsProps {
   onChange: (data: CollectionDetailsDataProps) => void
   uploadMethod: UploadMethod
+  coverImageUrl: string
 }
 
 export interface CollectionDetailsDataProps {
@@ -25,7 +26,7 @@ export interface CollectionDetailsDataProps {
   externalLink?: string
 }
 
-export const CollectionDetails = ({ onChange, uploadMethod }: CollectionDetailsProps) => {
+export const CollectionDetails = ({ onChange, uploadMethod, coverImageUrl }: CollectionDetailsProps) => {
   const [coverImage, setCoverImage] = useState<File | null>(null)
 
   const nameState = useInputState({
@@ -86,24 +87,36 @@ export const CollectionDetails = ({ onChange, uploadMethod }: CollectionDetailsP
       <FormGroup subtitle="Information about your collection" title="Collection Details">
         <TextInput {...nameState} isRequired />
         <TextInput {...descriptionState} isRequired />
+
         <FormControl isRequired={uploadMethod === 'new'} title="Cover Image">
-          <input
-            accept="image/*"
-            className={clsx(
-              'file:py-2 file:px-4 file:mr-4 file:bg-plumbus-light file:rounded file:border-0 cursor-pointer',
-              'before:hover:bg-white/5 before:transition',
-            )}
-            disabled={uploadMethod === 'existing'}
-            id="cover-image"
-            onChange={selectCoverImage}
-            type="file"
-          />
-          {coverImage !== null && (
+          {uploadMethod === 'new' && (
+            <input
+              accept="image/*"
+              className={clsx(
+                'file:py-2 file:px-4 file:mr-4 file:bg-plumbus-light file:rounded file:border-0 cursor-pointer',
+                'before:hover:bg-white/5 before:transition',
+              )}
+              id="cover-image"
+              onChange={selectCoverImage}
+              type="file"
+            />
+          )}
+
+          {coverImage !== null && uploadMethod === 'new' && (
             <div className="w-[200px] h-[200px] rounded border-2">
               <img alt="cover-preview" src={URL.createObjectURL(coverImage)} />
             </div>
           )}
+          {uploadMethod === 'existing' && coverImageUrl.includes('ipfs://') && (
+            <div className="w-[200px] h-[200px] rounded border-2">
+              <img
+                alt="cover-preview"
+                src={`https://ipfs.io/ipfs/${coverImageUrl.substring(coverImageUrl.lastIndexOf('ipfs://') + 7)}`}
+              />
+            </div>
+          )}
         </FormControl>
+
         <TextInput {...externalLinkState} />
       </FormGroup>
     </div>

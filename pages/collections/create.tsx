@@ -60,6 +60,8 @@ const CollectionCreationPage: NextPage = () => {
 
   const createCollection = async () => {
     try {
+      setBaseTokenUri(null)
+      setCoverImageUrl(null)
       setMinterContractAddress(null)
       setSg721ContractAddress(null)
       setTransactionHash(null)
@@ -72,7 +74,6 @@ const CollectionCreationPage: NextPage = () => {
         setUploading(true)
 
         const baseUri = await uploadFiles()
-        setBaseTokenUri(baseUri)
         //upload coverImageUri and append the file name
         const coverImageUri = await upload(
           collectionDetails?.imageFile as File[],
@@ -82,17 +83,19 @@ const CollectionCreationPage: NextPage = () => {
           uploadDetails.pinataApiKey as string,
           uploadDetails.pinataSecretKey as string,
         )
-        setCoverImageUrl(coverImageUri)
         setUploading(false)
+        let whitelist: string | undefined
+        if (whitelistDetails?.whitelistType === 'existing') whitelist = whitelistDetails.contractAddress
+        else if (whitelistDetails?.whitelistType === 'new') whitelist = await instantiateWhitelist()
+        await instantiate(baseUri, coverImageUri, whitelist)
       } else {
         setBaseTokenUri(uploadDetails?.baseTokenURI as string)
         setCoverImageUrl(uploadDetails?.imageUrl as string)
+        let whitelist: string | undefined
+        if (whitelistDetails?.whitelistType === 'existing') whitelist = whitelistDetails.contractAddress
+        else if (whitelistDetails?.whitelistType === 'new') whitelist = await instantiateWhitelist()
+        await instantiate(baseTokenUri as string, coverImageUrl as string, whitelist)
       }
-
-      let whitelist: string | undefined
-      if (whitelistDetails?.whitelistType === 'existing') whitelist = whitelistDetails.contractAddress
-      else if (whitelistDetails?.whitelistType === 'new') whitelist = await instantiateWhitelist()
-      await instantiate(baseTokenUri as string, coverImageUrl as string, whitelist)
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
@@ -136,7 +139,7 @@ const CollectionCreationPage: NextPage = () => {
       }
     }
     const msg = {
-      base_token_uri: `${uploadDetails?.uploadMethod === 'new' ? `ipfs://${baseUri}/` : `${baseTokenUri as string}`}`,
+      base_token_uri: `${uploadDetails?.uploadMethod === 'new' ? `ipfs://${baseUri}/` : `${baseUri}`}`,
       num_tokens: mintingDetails?.numTokens,
       sg721_code_id: SG721_CODE_ID,
       sg721_instantiate_msg: {
@@ -303,6 +306,11 @@ const CollectionCreationPage: NextPage = () => {
     if (minterContractAddress !== null) scrollRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [minterContractAddress])
 
+  useEffect(() => {
+    setBaseTokenUri(uploadDetails?.baseTokenURI as string)
+    setCoverImageUrl(uploadDetails?.imageUrl as string)
+  }, [uploadDetails?.baseTokenURI, uploadDetails?.imageUrl])
+
   return (
     <div>
       <NextSeo title="Create Collection" />
@@ -370,6 +378,7 @@ const CollectionCreationPage: NextPage = () => {
 
         <div className="flex justify-between py-3 px-8 rounded border-2 border-white/20 grid-col-2">
           <CollectionDetails
+            coverImageUrl={coverImageUrl as string}
             onChange={setCollectionDetails}
             uploadMethod={uploadDetails?.uploadMethod as UploadMethod}
           />
