@@ -103,16 +103,21 @@ export const CollectionDetails = ({ onChange, uploadMethod, coverImageUrl }: Col
           )}
 
           {coverImage !== null && uploadMethod === 'new' && (
-            <div className="w-[200px] h-[200px] rounded border-2">
-              <img alt="cover-preview" src={URL.createObjectURL(coverImage)} />
+            <div className="max-w-[200px] max-h-[200px] rounded border-2">
+              <img alt="no-preview-available" src={URL.createObjectURL(coverImage)} />
             </div>
           )}
           {uploadMethod === 'existing' && coverImageUrl.includes('ipfs://') && (
-            <div className="w-[200px] h-[200px] rounded border-2">
+            <div className="max-w-[200px] max-h-[200px] rounded border-2">
               <img
-                alt="cover-preview"
+                alt="no-preview-available"
                 src={`https://ipfs.io/ipfs/${coverImageUrl.substring(coverImageUrl.lastIndexOf('ipfs://') + 7)}`}
               />
+            </div>
+          )}
+          {uploadMethod === 'existing' && !coverImageUrl.includes('ipfs://') && (
+            <div className="max-w-[200px] max-h-[200px] rounded border-2">
+              <img alt="no-preview-available" src={coverImageUrl} />
             </div>
           )}
         </FormControl>
