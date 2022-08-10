@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 
 import { coin } from '@cosmjs/proto-signing'
+import { Alert } from 'components/Alert'
 import { Anchor } from 'components/Anchor'
 import Button from 'components/Button'
 import {
@@ -23,7 +24,7 @@ import { useContracts } from 'contexts/contracts'
 import { useWallet } from 'contexts/wallet'
 import type { NextPage } from 'next'
 import { NextSeo } from 'next-seo'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import useCollapse from 'react-collapsed'
 import { toast } from 'react-hot-toast'
 import type { UploadServiceType } from 'services/upload'
@@ -42,6 +43,7 @@ const CollectionCreationPage: NextPage = () => {
   const { getCollapseProps, getToggleProps, isExpanded } = useCollapse()
   const toggleProps = getToggleProps()
   const collapseProps = getCollapseProps()
+  const scrollRef = useRef<HTMLDivElement>(null)
 
   const [uploadDetails, setUploadDetails] = useState<UploadDetailsDataProps | null>(null)
   const [collectionDetails, setCollectionDetails] = useState<CollectionDetailsDataProps | null>(null)
@@ -50,11 +52,17 @@ const CollectionCreationPage: NextPage = () => {
   const [royaltyDetails, setRoyaltyDetails] = useState<RoyaltyDetailsDataProps | null>(null)
 
   const [uploading, setUploading] = useState(false)
-  const [contractAddress, setContractAddress] = useState<string | null>(null)
+  const [minterContractAddress, setMinterContractAddress] = useState<string | null>(null)
+  const [sg721ContractAddress, setSg721ContractAddress] = useState<string | null>(null)
+  const [baseTokenUri, setBaseTokenUri] = useState<string | null>(null)
   const [transactionHash, setTransactionHash] = useState<string | null>(null)
 
   const createCollection = async () => {
     try {
+      setBaseTokenUri(null)
+      setMinterContractAddress(null)
+      setSg721ContractAddress(null)
+      setTransactionHash(null)
       checkUploadDetails()
       checkCollectionDetails()
       checkMintingDetails()
@@ -64,6 +72,7 @@ const CollectionCreationPage: NextPage = () => {
       setUploading(true)
 
       const baseUri = await uploadFiles()
+      setBaseTokenUri(baseUri)
       //upload coverImageUri and append the file name
       const coverImageUri = await upload(
         collectionDetails?.imageFile as File[],
@@ -148,7 +157,8 @@ const CollectionCreationPage: NextPage = () => {
 
     const data = await minterContract.instantiate(MINTER_CODE_ID, msg, 'Stargaze Minter Contract', wallet.address)
     setTransactionHash(data.transactionHash)
-    setContractAddress(data.contractAddress)
+    setMinterContractAddress(data.contractAddress)
+    setSg721ContractAddress(data.logs[0].events[3].attributes[2].value)
   }
 
   const uploadFiles = async (): Promise<string> => {
@@ -274,6 +284,9 @@ const CollectionCreationPage: NextPage = () => {
       if (royaltyDetails.paymentAddress === '') throw new Error('Royalty payment address is required')
     }
   }
+  useEffect(() => {
+    if (minterContractAddress !== null) scrollRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [minterContractAddress])
 
   return (
     <div>
@@ -294,7 +307,21 @@ const CollectionCreationPage: NextPage = () => {
           on how to create your collection
         </p>
       </div>
-
+      <div className="mx-10" ref={scrollRef}>
+        <Conditional test={minterContractAddress !== null}>
+          <Alert className="mt-5" type="info">
+            <div>
+              Base Token URI: {baseTokenUri}
+              <br />
+              Minter Contract Address: {minterContractAddress}
+              <br />
+              SG721 Contract Address: {sg721ContractAddress}
+              <br />
+              Transaction Hash: {transactionHash}
+            </div>
+          </Alert>
+        </Conditional>
+      </div>
       <div className="mx-10">
         <UploadDetails onChange={setUploadDetails} />
 
