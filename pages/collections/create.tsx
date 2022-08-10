@@ -262,7 +262,7 @@ const CollectionCreationPage: NextPage = () => {
       throw new Error('Please specify a valid cover image URL')
     }
     if (uploadDetails.uploadMethod === 'existing' && !uploadDetails.baseTokenURI?.includes('ipfs://')) {
-      throw new Error('Please specify a valid cover image URL')
+      throw new Error('Please specify a valid base token URI')
     }
   }
 
