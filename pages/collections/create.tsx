@@ -249,11 +249,8 @@ const CollectionCreationPage: NextPage = () => {
         throw new Error('Please enter Pinata API and secret keys')
       }
     }
-    if (uploadDetails.uploadMethod === 'existing' && uploadDetails.baseTokenURI === '') {
-      throw new Error('Please enter the base token URI')
-    }
-    if (uploadDetails.uploadMethod === 'existing' && uploadDetails.imageUrl === '') {
-      throw new Error('Please specify a cover image URL')
+    if (uploadDetails.uploadMethod === 'existing' && !uploadDetails.baseTokenURI?.includes('ipfs://')) {
+      throw new Error('Please specify a valid base token URI')
     }
     if (
       uploadDetails.uploadMethod === 'existing' &&
@@ -264,9 +261,6 @@ const CollectionCreationPage: NextPage = () => {
       uploadDetails.imageUrl?.substring(uploadDetails.imageUrl.lastIndexOf('.') + 1) !== 'svg'
     ) {
       throw new Error('Please specify a valid cover image URL')
-    }
-    if (uploadDetails.uploadMethod === 'existing' && !uploadDetails.baseTokenURI?.includes('ipfs://')) {
-      throw new Error('Please specify a valid base token URI')
     }
   }
 
