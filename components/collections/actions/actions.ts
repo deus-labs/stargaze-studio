@@ -37,7 +37,7 @@ export const ACTION_LIST: ActionListItem[] = [
   {
     id: 'batch_mint',
     name: 'Batch Mint',
-    description: `Mint multiple tokens to a user with given token IDs`,
+    description: `Mint multiple tokens to a user with given token amount`,
   },
   {
     id: 'set_whitelist',
