@@ -52,6 +52,29 @@ export const AssetsPreview = ({ assetFilesArray, updateMetadataFileIndex }: Asse
           className="relative p-0 w-full h-full bg-transparent hover:bg-transparent border-0 btn modal-button"
           htmlFor="my-modal-4"
         >
+          {Math.floor(Math.log10((page - 1) * ITEM_NUMBER + (index + 1))) === 0 && (
+            <label className="absolute right-20 bottom-20 w-5 text-sm text-white bg-stargaze rounded-lg" htmlFor="test">
+              {(page - 1) * 12 + (index + 1)}
+            </label>
+          )}
+          {Math.floor(Math.log10((page - 1) * ITEM_NUMBER + (index + 1))) === 1 && (
+            <label className="absolute right-20 bottom-20 w-5 text-sm text-white bg-stargaze rounded-lg" htmlFor="test">
+              {(page - 1) * 12 + (index + 1)}
+            </label>
+          )}
+          {Math.floor(Math.log10((page - 1) * ITEM_NUMBER + (index + 1))) === 2 && (
+            <label
+              className="absolute right-16 bottom-20 mr-2 w-7 text-sm text-white bg-stargaze  rounded-lg"
+              htmlFor="test"
+            >
+              {(page - 1) * 12 + (index + 1)}
+            </label>
+          )}
+          {Math.floor(Math.log10((page - 1) * ITEM_NUMBER + (index + 1))) === 3 && (
+            <label className="absolute right-16 bottom-20 w-9 text-sm text-white bg-stargaze rounded-lg" htmlFor="test">
+              {(page - 1) * 12 + (index + 1)}
+            </label>
+          )}
           {getAssetType(assetSource.name) === 'audio' && (
             <div className="flex absolute flex-col items-center mt-4 ml-2">
               <img key={`audio-${index}`} alt="audio_icon" className="mb-2 ml-1 w-6 h-6 thumbnail" src="/audio.png" />
@@ -62,12 +85,14 @@ export const AssetsPreview = ({ assetFilesArray, updateMetadataFileIndex }: Asse
             videoPreviewElements.filter((videoPreviewElement) => videoPreviewElement.key === assetSource.name)}
 
           {getAssetType(assetSource.name) === 'image' && (
-            <img
-              key={`image-${index}`}
-              alt="asset"
-              className="px-1 my-1 thumbnail"
-              src={URL.createObjectURL(assetSource)}
-            />
+            <div>
+              <img
+                key={`image-${index}`}
+                alt="asset"
+                className="px-1 my-1 thumbnail"
+                src={URL.createObjectURL(assetSource)}
+              />
+            </div>
           )}
         </label>
       </button>
