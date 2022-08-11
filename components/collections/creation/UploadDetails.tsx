@@ -65,7 +65,7 @@ export const UploadDetails = ({ onChange }: UploadDetailsProps) => {
     id: 'baseTokenUri',
     name: 'baseTokenUri',
     title: 'Base Token URI',
-    placeholder: '...',
+    placeholder: 'ipfs://',
     defaultValue: '',
   })
 
@@ -73,7 +73,7 @@ export const UploadDetails = ({ onChange }: UploadDetailsProps) => {
     id: 'coverImageUrl',
     name: 'coverImageUrl',
     title: 'Cover Image URL',
-    placeholder: '...',
+    placeholder: 'ipfs://',
     defaultValue: '',
   })
 
@@ -225,26 +225,10 @@ export const UploadDetails = ({ onChange }: UploadDetailsProps) => {
               and upload your assets & metadata manually to get a base URI for your collection.
             </p>
             <div>
-              <TextInput
-                {...baseTokenUriState}
-                className="py-2 px-1 mx-5 mt-2 mb-2 w-1/2 bg-white/10 rounded border-2 border-white/20 focus:ring
-          focus:ring-plumbus-20
-          form-input, placeholder:text-white/50,"
-                id="baseTokenURI"
-                onChange={(e) => baseTokenUriState.onChange(e.target.value)}
-                placeholder="ipfs://..."
-              />
+              <TextInput {...baseTokenUriState} className="w-1/2" id="baseTokenURI" />
             </div>
             <div>
-              <TextInput
-                {...coverImageUrlState}
-                className="py-2 px-1 mx-5 mt-2 mb-2 w-1/2 bg-white/10 rounded border-2 border-white/20 focus:ring
-          focus:ring-plumbus-20
-          form-input, placeholder:text-white/50,"
-                id="coverImage"
-                onChange={(e) => coverImageUrlState.onChange(e.target.value)}
-                placeholder="ipfs://bafybeigi3bwpvyvsmnbj46ra4hyffcxdeaj6ntfk5jpic5mx27x6ih2qvq/images/1.png"
-              />
+              <TextInput {...coverImageUrlState} className="mt-2 w-1/2" id="coverImage" />
             </div>
           </div>
         </Conditional>

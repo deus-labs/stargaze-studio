@@ -66,7 +66,6 @@ export const MintingDetails = ({ onChange, numberOfTokens, uploadMethod }: Minti
           {...numberOfTokensState}
           disabled={uploadMethod === 'new'}
           isRequired
-          onChange={(e) => numberOfTokensState.onChange(Number(e.target.value))}
           value={uploadMethod === 'new' ? numberOfTokens : numberOfTokensState.value}
         />
         <NumberInput {...unitPriceState} isRequired />

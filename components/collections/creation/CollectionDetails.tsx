@@ -116,10 +116,13 @@ export const CollectionDetails = ({ onChange, uploadMethod, coverImageUrl }: Col
               />
             </div>
           )}
-          {uploadMethod === 'existing' && !coverImageUrl?.includes('ipfs://') && (
+          {uploadMethod === 'existing' && coverImageUrl && !coverImageUrl?.includes('ipfs://') && (
             <div className="max-w-[200px] max-h-[200px] rounded border-2">
               <img alt="no-preview-available" src={coverImageUrl} />
             </div>
+          )}
+          {uploadMethod === 'existing' && !coverImageUrl && (
+            <span className="italic font-light ">Waiting for cover image URL to be specified.</span>
           )}
         </FormControl>
 
