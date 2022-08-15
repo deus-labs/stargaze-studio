@@ -14,6 +14,8 @@ export const ACTION_TYPES = [
   'update_per_address_limit',
   'withdraw',
   'transfer',
+  'burn',
+  'batch_burn',
   'shuffle',
 ] as const
 
@@ -65,6 +67,16 @@ export const ACTION_LIST: ActionListItem[] = [
     description: `Transfer tokens from one address to another`,
   },
   {
+    id: 'burn',
+    name: 'Burn Token',
+    description: `Burn a specified token from the collection`,
+  },
+  {
+    id: 'batch_burn',
+    name: 'Batch Burn Tokens',
+    description: `Burn a list of tokens from the collection`,
+  },
+  {
     id: 'shuffle',
     name: 'Shuffle Tokens',
     description: 'Shuffle the token IDs',
@@ -96,6 +108,8 @@ export type DispatchExecuteArgs = {
   | { type: Select<'shuffle'> }
   | { type: Select<'withdraw'> }
   | { type: Select<'transfer'>; recipient: string; tokenId: number }
+  | { type: Select<'burn'>; tokenId: number }
+  | { type: Select<'batch_burn'>; tokenIds: string }
 )
 
 export const dispatchExecute = async (args: DispatchExecuteArgs) => {
@@ -130,6 +144,12 @@ export const dispatchExecute = async (args: DispatchExecuteArgs) => {
     }
     case 'transfer': {
       return sg721Messages.transferNft(args.recipient, args.tokenId.toString())
+    }
+    case 'burn': {
+      return sg721Messages.burn(args.tokenId.toString())
+    }
+    case 'batch_burn': {
+      return sg721Messages.batchBurn(args.tokenIds)
     }
     default: {
       throw new Error('Unknown action')
@@ -170,6 +190,12 @@ export const previewExecutePayload = (args: DispatchExecuteArgs) => {
     }
     case 'transfer': {
       return sg721Messages(sg721Contract)?.transferNft(args.recipient, args.tokenId.toString())
+    }
+    case 'burn': {
+      return sg721Messages(sg721Contract)?.burn(args.sg721Contract, args.tokenId.toString())
+    }
+    case 'batch_burn': {
+      return sg721Messages(sg721Contract)?.batchBurn(args.sg721Contract, args.tokenIds)
     }
     default: {
       return {}
