@@ -79,8 +79,8 @@ export interface Sg721Messages {
   approveAll: (operator: string, expires?: Expiration) => ApproveAllMessage
   revokeAll: (operator: string) => RevokeAllMessage
   mint: (tokenId: string, owner: string, tokenURI?: string) => MintMessage
-  burn: (contractAddr: string, tokenId: string) => BurnMessage
-  batchBurn: (contractAddr: string, tokenIds: string) => BatchBurnMessage
+  burn: (tokenId: string) => BurnMessage
+  batchBurn: (tokenIds: string) => BatchBurnMessage
 }
 
 export interface TransferNFTMessage {

@@ -165,37 +165,37 @@ export const previewExecutePayload = (args: DispatchExecuteArgs) => {
   const { minterContract, sg721Contract } = args
   switch (args.type) {
     case 'mint_to': {
-      return minterMessages()?.mintTo(minterContract, args.recipient)
+      return minterMessages(minterContract)?.mintTo(args.recipient)
     }
     case 'mint_for': {
-      return minterMessages()?.mintFor(minterContract, args.recipient, args.tokenId)
+      return minterMessages(minterContract)?.mintFor(args.recipient, args.tokenId)
     }
     case 'batch_mint': {
-      return minterMessages()?.batchMint(minterContract, args.recipient, args.batchNumber)
+      return minterMessages(minterContract)?.batchMint(args.recipient, args.batchNumber)
     }
     case 'set_whitelist': {
-      return minterMessages()?.setWhitelist(minterContract, args.whitelist)
+      return minterMessages(minterContract)?.setWhitelist(args.whitelist)
     }
     case 'update_start_time': {
-      return minterMessages()?.updateStartTime(minterContract, args.startTime)
+      return minterMessages(minterContract)?.updateStartTime(args.startTime)
     }
     case 'update_per_address_limit': {
-      return minterMessages()?.updatePerAddressLimit(minterContract, args.limit)
+      return minterMessages(minterContract)?.updatePerAddressLimit(args.limit)
     }
     case 'shuffle': {
-      return minterMessages()?.shuffle(minterContract)
+      return minterMessages(minterContract)?.shuffle()
     }
     case 'withdraw': {
-      return minterMessages()?.withdraw(minterContract)
+      return minterMessages(minterContract)?.withdraw()
     }
     case 'transfer': {
       return sg721Messages(sg721Contract)?.transferNft(args.recipient, args.tokenId.toString())
     }
     case 'burn': {
-      return sg721Messages(sg721Contract)?.burn(args.sg721Contract, args.tokenId.toString())
+      return sg721Messages(sg721Contract)?.burn(args.tokenId.toString())
     }
     case 'batch_burn': {
-      return sg721Messages(sg721Contract)?.batchBurn(args.sg721Contract, args.tokenIds)
+      return sg721Messages(sg721Contract)?.batchBurn(args.tokenIds)
     }
     default: {
       return {}
