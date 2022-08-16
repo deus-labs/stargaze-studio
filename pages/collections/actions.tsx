@@ -74,7 +74,8 @@ const CollectionActionsPage: NextPage = () => {
     id: 'token-id-list',
     name: 'tokenIdList',
     title: 'The list of token IDs',
-    subtitle: 'Specify the list of token IDs (separated by commas)',
+    subtitle:
+      'Specify individual token IDs separated by commas (e.g., 2, 4, 8) or a range of IDs separated by a colon (e.g, 8:13)',
   })
 
   const recipientState = useInputState({

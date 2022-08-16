@@ -420,21 +420,40 @@ export const SG721 = (client: SigningCosmWasmClient, txSigner: string): SG721Con
 
     const batchBurn = async (tokenIds: string): Promise<string> => {
       const executeContractMsgs: MsgExecuteContractEncodeObject[] = []
-      const tokenNumbers = tokenIds.split(',').map(Number)
-      for (let i = 0; i < tokenNumbers.length; i++) {
-        const msg = {
-          burn: { token_id: tokenNumbers[i].toString() },
-        }
-        const executeContractMsg: MsgExecuteContractEncodeObject = {
-          typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
-          value: MsgExecuteContract.fromPartial({
-            sender: txSigner,
-            contract: contractAddress,
-            msg: toUtf8(JSON.stringify(msg)),
-          }),
-        }
+      if (tokenIds.includes(':')) {
+        const [start, end] = tokenIds.split(':').map(Number)
+        for (let i = start; i <= end; i++) {
+          const msg = {
+            burn: { token_id: i.toString() },
+          }
+          const executeContractMsg: MsgExecuteContractEncodeObject = {
+            typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
+            value: MsgExecuteContract.fromPartial({
+              sender: txSigner,
+              contract: contractAddress,
+              msg: toUtf8(JSON.stringify(msg)),
+            }),
+          }
 
-        executeContractMsgs.push(executeContractMsg)
+          executeContractMsgs.push(executeContractMsg)
+        }
+      } else {
+        const tokenNumbers = tokenIds.split(',').map(Number)
+        for (let i = 0; i < tokenNumbers.length; i++) {
+          const msg = {
+            burn: { token_id: tokenNumbers[i].toString() },
+          }
+          const executeContractMsg: MsgExecuteContractEncodeObject = {
+            typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
+            value: MsgExecuteContract.fromPartial({
+              sender: txSigner,
+              contract: contractAddress,
+              msg: toUtf8(JSON.stringify(msg)),
+            }),
+          }
+
+          executeContractMsgs.push(executeContractMsg)
+        }
       }
 
       const res = await client.signAndBroadcast(txSigner, executeContractMsgs, 'auto', 'batch burn')
@@ -602,9 +621,18 @@ export const SG721 = (client: SigningCosmWasmClient, txSigner: string): SG721Con
 
     const batchBurn = (contractAddr: string, tokenIds: string): BatchBurnMessage => {
       const msg: Record<string, unknown>[] = []
-      const tokenNumbers = tokenIds.split(',').map(Number)
-      for (let i = 0; i < tokenNumbers.length; i++) {
-        msg.push({ burn: { token_id: tokenNumbers[i].toString() } })
+      if (tokenIds.includes(':')) {
+        const [start, end] = tokenIds.split(':').map(Number)
+        for (let i = start; i <= end; i++) {
+          msg.push({
+            burn: { token_id: i.toString() },
+          })
+        }
+      } else {
+        const tokenNumbers = tokenIds.split(',').map(Number)
+        for (let i = 0; i < tokenNumbers.length; i++) {
+          msg.push({ burn: { token_id: tokenNumbers[i].toString() } })
+        }
       }
 
       return {
