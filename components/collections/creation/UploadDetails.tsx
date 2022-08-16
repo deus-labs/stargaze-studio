@@ -225,10 +225,10 @@ export const UploadDetails = ({ onChange }: UploadDetailsProps) => {
               and upload your assets & metadata manually to get a base URI for your collection.
             </p>
             <div>
-              <TextInput {...baseTokenUriState} className="w-1/2" id="baseTokenURI" />
+              <TextInput {...baseTokenUriState} className="w-1/2" />
             </div>
             <div>
-              <TextInput {...coverImageUrlState} className="mt-2 w-1/2" id="coverImage" />
+              <TextInput {...coverImageUrlState} className="mt-2 w-1/2" />
             </div>
           </div>
         </Conditional>
