@@ -147,7 +147,7 @@ const CollectionCreationPage: NextPage = () => {
       sg721_code_id: SG721_CODE_ID,
       sg721_instantiate_msg: {
         name: collectionDetails?.name,
-        symbol: 'SYMBOL',
+        symbol: collectionDetails?.symbol,
         minter: wallet.address,
         collection_info: {
           creator: wallet.address,
@@ -411,21 +411,14 @@ const CollectionCreationPage: NextPage = () => {
             uploadMethod={uploadDetails?.uploadMethod as UploadMethod}
           />
         </div>
-
-        <div className="flex justify-between my-6">
-          <Button {...toggleProps} isWide type="button" variant="outline">
-            {isExpanded ? 'Hide' : 'Show'} Advanced Details
-          </Button>
-          <Button isWide onClick={createCollection} variant="solid">
-            Create Collection
-          </Button>
-        </div>
-
-        <section {...collapseProps} className="mb-10">
+        <div className="my-6">
           <WhitelistDetails onChange={setWhitelistDetails} />
           <div className="my-6" />
           <RoyaltyDetails onChange={setRoyaltyDetails} />
-        </section>
+        </div>
+        <Button isWide onClick={createCollection} variant="solid">
+          Create Collection
+        </Button>
       </div>
     </div>
   )
