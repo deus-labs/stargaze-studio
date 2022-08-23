@@ -43,8 +43,8 @@ export const WhitelistDetails = ({ onChange }: WhitelistDetailsProps) => {
     id: 'unit-price',
     name: 'unitPrice',
     title: 'Unit Price',
-    subtitle: 'Price of each token for whitelisted addresses',
-    placeholder: '500',
+    subtitle: 'Token price for whitelisted addresses \n (min. 25 STARS)',
+    placeholder: '25',
   })
 
   const memberLimitState = useNumberInputState({
