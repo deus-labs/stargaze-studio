@@ -286,6 +286,7 @@ const CollectionCreationPage: NextPage = () => {
     )
       throw new Error('Invalid limit for tokens per address')
     if (mintingDetails.startTime === '') throw new Error('Start time is required')
+    if (Number(mintingDetails.startTime) < new Date().getTime() * 1000000) throw new Error('Invalid start time')
   }
 
   const checkWhitelistDetails = () => {
@@ -301,6 +302,10 @@ const CollectionCreationPage: NextPage = () => {
       if (whitelistDetails.endTime === '') throw new Error('End time is required')
       if (whitelistDetails.perAddressLimit === 0) throw new Error('Per address limit is required')
       if (whitelistDetails.memberLimit === 0) throw new Error('Member limit is required')
+      if (Number(whitelistDetails.startTime) > Number(whitelistDetails.endTime))
+        throw new Error('Whitelist start time cannot be later than whitelist end time')
+      if (Number(whitelistDetails.endTime) > Number(mintingDetails?.startTime))
+        throw new Error('Whitelist end time cannot be later than minting start time')
     }
   }
 
