@@ -312,8 +312,8 @@ const CollectionCreationPage: NextPage = () => {
   const checkRoyaltyDetails = () => {
     if (!royaltyDetails) throw new Error('Please fill out the royalty details')
     if (royaltyDetails.royaltyType === 'new') {
-      if (royaltyDetails.share === 0) throw new Error('Royalty share is required')
-      if (royaltyDetails.share > 100 || royaltyDetails.share < 0) throw new Error('Invalid royalty share')
+      if (royaltyDetails.share === 0) throw new Error('Royalty share percentage is required')
+      if (royaltyDetails.share > 100 || royaltyDetails.share < 0) throw new Error('Invalid royalty share percentage')
       if (royaltyDetails.paymentAddress === '') throw new Error('Royalty payment address is required')
     }
   }
