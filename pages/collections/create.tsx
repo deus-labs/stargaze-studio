@@ -305,7 +305,7 @@ const CollectionCreationPage: NextPage = () => {
       if (Number(whitelistDetails.startTime) > Number(whitelistDetails.endTime))
         throw new Error('Whitelist start time cannot be later than whitelist end time')
       if (Number(whitelistDetails.endTime) > Number(mintingDetails?.startTime))
-        throw new Error('Whitelist end time cannot be later than minting start time')
+        throw new Error('Whitelist end time cannot be later than public start time')
     }
   }
 
