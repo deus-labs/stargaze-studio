@@ -35,6 +35,7 @@ import { withMetadata } from 'utils/layout'
 import { links } from 'utils/links'
 
 import type { UploadMethod } from '../../components/collections/creation/UploadDetails'
+import { ConfirmationModal } from '../../components/ConfirmationModal'
 import { getAssetType } from '../../utils/getAssetType'
 
 const CollectionCreationPage: NextPage = () => {
@@ -53,12 +54,28 @@ const CollectionCreationPage: NextPage = () => {
   const [royaltyDetails, setRoyaltyDetails] = useState<RoyaltyDetailsDataProps | null>(null)
 
   const [uploading, setUploading] = useState(false)
+  const [readyToCreate, setReadyToCreate] = useState(false)
   const [minterContractAddress, setMinterContractAddress] = useState<string | null>(null)
   const [sg721ContractAddress, setSg721ContractAddress] = useState<string | null>(null)
   const [baseTokenUri, setBaseTokenUri] = useState<string | null>(null)
   const [coverImageUrl, setCoverImageUrl] = useState<string | null>(null)
   const [transactionHash, setTransactionHash] = useState<string | null>(null)
 
+  const performChecks = () => {
+    try {
+      setReadyToCreate(false)
+      checkUploadDetails()
+      checkCollectionDetails()
+      checkMintingDetails()
+      checkWhitelistDetails()
+      checkRoyaltyDetails()
+      setReadyToCreate(true)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      toast.error(error.message)
+      setUploading(false)
+    }
+  }
   const createCollection = async () => {
     try {
       setBaseTokenUri(null)
@@ -66,11 +83,6 @@ const CollectionCreationPage: NextPage = () => {
       setMinterContractAddress(null)
       setSg721ContractAddress(null)
       setTransactionHash(null)
-      checkUploadDetails()
-      checkCollectionDetails()
-      checkMintingDetails()
-      checkWhitelistDetails()
-      checkRoyaltyDetails()
       if (uploadDetails?.uploadMethod === 'new') {
         setUploading(true)
 
@@ -421,8 +433,14 @@ const CollectionCreationPage: NextPage = () => {
           <div className="my-6" />
           <RoyaltyDetails onChange={setRoyaltyDetails} />
         </div>
-        <Button isWide onClick={createCollection} variant="solid">
-          Create Collection
+        {readyToCreate && <ConfirmationModal confirm={createCollection} />}
+        <Button className="px-0 mb-6 max-h-12" onClick={performChecks} variant="solid">
+          <label
+            className="relative w-full h-full bg-transparent hover:bg-transparent border-0 btn modal-button"
+            htmlFor="my-modal-2"
+          >
+            Create Collection
+          </label>
         </Button>
       </div>
     </div>
