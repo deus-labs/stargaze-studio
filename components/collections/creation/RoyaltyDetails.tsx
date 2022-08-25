@@ -33,7 +33,7 @@ export const RoyaltyDetails = ({ onChange }: RoyaltyDetailsProps) => {
     name: 'royaltyShare',
     title: 'Share Percentage',
     subtitle: 'Percentage of royalties to be paid',
-    placeholder: '8 %',
+    placeholder: '8%',
   })
 
   useEffect(() => {
@@ -84,8 +84,8 @@ export const RoyaltyDetails = ({ onChange }: RoyaltyDetailsProps) => {
       </div>
       <Conditional test={royaltyState === 'new'}>
         <FormGroup subtitle="Information about royalty" title="Royalty Details">
-          <TextInput {...royaltyPaymentAddressState} />
-          <NumberInput {...royaltyShareState} />
+          <TextInput {...royaltyPaymentAddressState} isRequired />
+          <NumberInput {...royaltyShareState} isRequired />
         </FormGroup>
       </Conditional>
     </div>

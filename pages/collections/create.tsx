@@ -26,7 +26,6 @@ import { useWallet } from 'contexts/wallet'
 import type { NextPage } from 'next'
 import { NextSeo } from 'next-seo'
 import { useEffect, useRef, useState } from 'react'
-import useCollapse from 'react-collapsed'
 import { toast } from 'react-hot-toast'
 import { upload } from 'services/upload'
 import { compareFileArrays } from 'utils/compareFileArrays'
@@ -41,10 +40,6 @@ import { getAssetType } from '../../utils/getAssetType'
 const CollectionCreationPage: NextPage = () => {
   const wallet = useWallet()
   const { minter: minterContract, whitelist: whitelistContract } = useContracts()
-
-  const { getCollapseProps, getToggleProps, isExpanded } = useCollapse()
-  const toggleProps = getToggleProps()
-  const collapseProps = getCollapseProps()
   const scrollRef = useRef<HTMLDivElement>(null)
 
   const [uploadDetails, setUploadDetails] = useState<UploadDetailsDataProps | null>(null)
@@ -63,12 +58,12 @@ const CollectionCreationPage: NextPage = () => {
 
   const performChecks = () => {
     try {
-      setReadyToCreate(false)
-      checkUploadDetails()
-      checkCollectionDetails()
-      checkMintingDetails()
-      checkWhitelistDetails()
-      checkRoyaltyDetails()
+      // setReadyToCreate(false)
+      // checkUploadDetails()
+      // checkCollectionDetails()
+      // checkMintingDetails()
+      // checkWhitelistDetails()
+      // checkRoyaltyDetails()
       setReadyToCreate(true)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
@@ -76,6 +71,7 @@ const CollectionCreationPage: NextPage = () => {
       setUploading(false)
     }
   }
+
   const createCollection = async () => {
     try {
       setBaseTokenUri(null)
@@ -96,22 +92,27 @@ const CollectionCreationPage: NextPage = () => {
           uploadDetails.pinataApiKey as string,
           uploadDetails.pinataSecretKey as string,
         )
+
         setUploading(false)
+
         setBaseTokenUri(baseUri)
         setCoverImageUrl(coverImageUri)
+
         let whitelist: string | undefined
         if (whitelistDetails?.whitelistType === 'existing') whitelist = whitelistDetails.contractAddress
         else if (whitelistDetails?.whitelistType === 'new') whitelist = await instantiateWhitelist()
+
         await instantiate(baseUri, coverImageUri, whitelist)
       } else {
         setBaseTokenUri(uploadDetails?.baseTokenURI as string)
         setCoverImageUrl(uploadDetails?.imageUrl as string)
+
         let whitelist: string | undefined
         if (whitelistDetails?.whitelistType === 'existing') whitelist = whitelistDetails.contractAddress
         else if (whitelistDetails?.whitelistType === 'new') whitelist = await instantiateWhitelist()
+
         await instantiate(baseTokenUri as string, coverImageUrl as string, whitelist)
       }
-
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error.message)
@@ -153,6 +154,7 @@ const CollectionCreationPage: NextPage = () => {
         share: (Number(royaltyDetails.share) / 100).toString(),
       }
     }
+
     const msg = {
       base_token_uri: `${uploadDetails?.uploadMethod === 'new' ? `ipfs://${baseUri}/` : `${baseUri}`}`,
       num_tokens: mintingDetails?.numTokens,
@@ -199,20 +201,25 @@ const CollectionCreationPage: NextPage = () => {
         .then((assetUri: string) => {
           const fileArray: File[] = []
           let reader: FileReader
+
           for (let i = 0; i < uploadDetails.metadataFiles.length; i++) {
             reader = new FileReader()
             reader.onload = (e) => {
               const data: any = JSON.parse(e.target?.result as string)
+
               if (
                 getAssetType(uploadDetails.assetFiles[i].name) === 'audio' ||
                 getAssetType(uploadDetails.assetFiles[i].name) === 'video'
               ) {
                 data.animation_url = `ipfs://${assetUri}/${uploadDetails.assetFiles[i].name}`
               }
+
               data.image = `ipfs://${assetUri}/${uploadDetails.assetFiles[i].name}`
+
               const metadataFileBlob = new Blob([JSON.stringify(data)], {
                 type: 'application/json',
               })
+
               const updatedMetadataFile = new File(
                 [metadataFileBlob],
                 uploadDetails.metadataFiles[i].name.substring(0, uploadDetails.metadataFiles[i].name.lastIndexOf('.')),
@@ -220,6 +227,7 @@ const CollectionCreationPage: NextPage = () => {
                   type: 'application/json',
                 },
               )
+
               fileArray.push(updatedMetadataFile)
             }
             reader.onloadend = () => {
@@ -434,14 +442,16 @@ const CollectionCreationPage: NextPage = () => {
           <RoyaltyDetails onChange={setRoyaltyDetails} />
         </div>
         {readyToCreate && <ConfirmationModal confirm={createCollection} />}
-        <Button className="px-0 mb-6 max-h-12" onClick={performChecks} variant="solid">
-          <label
-            className="relative w-full h-full bg-transparent hover:bg-transparent border-0 btn modal-button"
-            htmlFor="my-modal-2"
-          >
-            Create Collection
-          </label>
-        </Button>
+        <div className="flex justify-end w-full">
+          <Button className="px-0 mb-6 max-h-12" onClick={performChecks} variant="solid">
+            <label
+              className="relative justify-end w-full h-full text-white bg-plumbus-light hover:bg-plumbus-light border-0 btn modal-button"
+              htmlFor="my-modal-2"
+            >
+              Create Collection
+            </label>
+          </Button>
+        </div>
       </div>
     </div>
   )

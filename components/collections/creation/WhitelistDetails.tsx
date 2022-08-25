@@ -145,11 +145,7 @@ export const WhitelistDetails = ({ onChange }: WhitelistDetailsProps) => {
       </div>
 
       <Conditional test={whitelistState === 'existing'}>
-        <AddressInput
-          {...whitelistAddressState}
-          className="pb-5"
-          onChange={(e) => whitelistAddressState.onChange(e.target.value)}
-        />
+        <AddressInput {...whitelistAddressState} className="pb-5" isRequired />
       </Conditional>
 
       <Conditional test={whitelistState === 'new'}>
