@@ -117,19 +117,19 @@ export const AssetsPreview = ({ assetFilesArray, updateMetadataFileIndex }: Asse
     <div className="flex flex-col items-center">
       <div className="mt-2 w-[400px] h-[300px]">{renderImages()}</div>
       <div className="mt-5 btn-group">
-        <button className="text-white bg-plumbus-light btn" onClick={multiplePrevPage} type="button">
+        <button className="text-white bg-plumbus btn" onClick={multiplePrevPage} type="button">
           ««
         </button>
-        <button className="text-white bg-plumbus-light btn" onClick={prevPage} type="button">
+        <button className="text-white bg-plumbus btn" onClick={prevPage} type="button">
           «
         </button>
         <button className="text-white btn" type="button">
           Page {page}/{totalPages}
         </button>
-        <button className="text-white bg-plumbus-light btn" onClick={nextPage} type="button">
+        <button className="text-white bg-plumbus btn" onClick={nextPage} type="button">
           »
         </button>
-        <button className="text-white bg-plumbus-light btn" onClick={multipleNextPage} type="button">
+        <button className="text-white bg-plumbus btn" onClick={multipleNextPage} type="button">
           »»
         </button>
       </div>

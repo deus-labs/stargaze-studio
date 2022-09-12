@@ -104,7 +104,7 @@ export const CollectionDetails = ({ onChange, uploadMethod, coverImageUrl }: Col
             <input
               accept="image/*"
               className={clsx(
-                'file:py-2 file:px-4 file:mr-4 file:bg-plumbus-light file:rounded file:border-0 cursor-pointer',
+                'file:py-2 file:px-4 file:mr-4 file:bg-plumbus file:rounded file:border-0 cursor-pointer',
                 'before:hover:bg-white/5 before:transition',
               )}
               id="cover-image"

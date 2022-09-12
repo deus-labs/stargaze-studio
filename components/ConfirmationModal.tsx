@@ -27,7 +27,7 @@ export const ConfirmationModal = (props: ConfirmationModalProps) => {
             </Button>
             <Button className="px-0 mt-4 mb-4 max-h-12" onClick={props.confirm}>
               <label
-                className="w-full h-full text-white bg-plumbus-light hover:bg-plumbus-light border-0 btn modal-button"
+                className="w-full h-full text-white bg-plumbus hover:bg-plumbus-light border-0 btn modal-button"
                 htmlFor="my-modal-2"
               >
                 Confirm
